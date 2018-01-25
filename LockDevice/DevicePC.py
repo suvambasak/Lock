@@ -4,15 +4,13 @@ import threading
 import json
 import time
 import sys
-import os
-import platform
-import ctypes
-import CaptureImage as camera
+# import CaptureImage as camera
+import CaptureImagePC as camera
 
 
 # Send image function.
 # parameter Email, Bell
-def sendImage(email = False, bell = False):
+def sendImage(emailId,email = False, bell = False):
 	global host, username
 
 	try:
@@ -24,6 +22,7 @@ def sendImage(email = False, bell = False):
 		filename = {}
 		filename['name'] = name
 		filename['username'] = username
+		filename['emailId'] = emailId
 
 		if email:
 			filename['email'] = 'YES'
@@ -66,7 +65,7 @@ def sendImage(email = False, bell = False):
 
 
 # Take image function.
-def takeImage(email=False):
+def takeImage( emailId,email=False):
 	# initilizing global variables
 	global cameraLock, host, username
 	print ('\n[||] Email :: ' + str(email))
@@ -79,9 +78,9 @@ def takeImage(email=False):
 
 		# checking for email request ot Take image request.
 		if email:
-			sendImage(email=True)
+			sendImage(emailId,email=True)
 		else:
-			sendImage()
+			sendImage(emailId)
 
 	except Exception as e:
 		print ('[**] Exception :: Take Image function :: ' + str(e))
@@ -108,11 +107,11 @@ def callingBell():
 
 			try:
 				# execute the FileName.py for take the image.
-				camera.capture()
+				# camera.capture()
 				time.sleep(2)
 
 				# sending the image.
-				sendImage(bell=True)
+				sendImage(None,bell=True)
 
 				print ('complete')
 			except Exception as e:
@@ -123,17 +122,14 @@ def callingBell():
 
 
 # global veriable.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, status
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator
 
 # Setting username MAC address Host IPv4 and post number.
 username = 'basak'
 MAC = physicalAddress.getMACHash()
 host = str(sys.argv[1])
 post = 9000
-status = False
 
-lock = True
-unlock = False
 bellActivator = True
 # thread locks || one camera lock || one door lock.
 doorLock = threading.Lock()
@@ -198,23 +194,12 @@ try:
 			device.send(str.encode(jsonResponse))
 
 		# Lock request.
-		elif request['request'] == 'Lock' and status == unlock:
+		elif request['request'] == 'Lock':
 			print ('Requesting for : LOCK')
 
-			if platform.system() == 'Linux':
-				os.system("eject cdrom")
-			elif platform.system() == 'Windows':
-				ctypes.windll.WINMM.mciSendStringW(u"set cdaudio door open", None, 0, None)
-			print ('[*] Door :: Locked')
-
 		# Unlock request.
-		elif request['request'] == 'Unlock' and status == lock:
+		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
-
-			if platform.system() == 'Linux':
-				os.system("eject -t cdrom")
-			elif platform.system() == 'Windows':
-				ctypes.windll.WINMM.mciSendStringW(u"set cdaudio door closed", None, 0, None)
 
 
 		# TakeImage request.
@@ -222,7 +207,7 @@ try:
 			print ('Requesting for : TAKE IMAGE')
 
 			# creating a thread for take image function.
-			takeImageFunction = threading.Thread(target=takeImage, name='functionTakeImage')
+			takeImageFunction = threading.Thread(target=takeImage,args=(request['email'],False), name='functionTakeImage')
 			takeImageFunction.start()
 
 
@@ -230,7 +215,7 @@ try:
 		elif request['request'] == 'Email':
 			print ('Requesting for : EMAIL')
 			# creating a thread for Email image.
-			emailImageFunction = threading.Thread(target=takeImage,args=(True,) , name='functionEmailImage')
+			emailImageFunction = threading.Thread(target=takeImage,args=(request['email'],True) , name='functionEmailImage')
 			emailImageFunction.start()
 
 except KeyboardInterrupt as e:

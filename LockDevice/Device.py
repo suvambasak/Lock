@@ -4,8 +4,8 @@ import threading
 import json
 import time
 import sys
-import CaptureImage as camera
-# import CaptureImagePC as camera
+import FileName
+import picamera
 
 
 # Send image function.
@@ -72,9 +72,9 @@ def takeImage( emailId,email=False):
 	# locking the camera to prevent another thread to use camera.
 	cameraLock.acquire()
 	try:
-		# execute the CaptureImage.py for take the image.
-		camera.capture()
-		time.sleep(2)
+		new_filename = 'ProgramData/'+FileName.get_filename()
+		camera = picamera.PiCamera()
+		camera.capture('new_filename')
 
 		# checking for email request ot Take image request.
 		if email:
@@ -86,7 +86,6 @@ def takeImage( emailId,email=False):
 		print ('[**] Exception :: Take Image function :: ' + str(e))
 	finally:
 		print ('[*] Done')
-
 		# releasing the lock when execution of the method complete.
 		cameraLock.release()
 		print ('\n-' * 5)
@@ -106,7 +105,7 @@ def callingBell():
 			cameraLock.acquire()
 
 			try:
-				# execute the CaptureImage.py for take the image.
+				# execute the FileName.py for take the image.
 				# camera.capture()
 				time.sleep(2)
 

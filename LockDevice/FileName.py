@@ -1,8 +1,7 @@
 import os
-import picamera
 
 
-def capture():
+def get_filename():
 	print ("[*] Checking path...\n")
 
 	## Creation of ProgramData folder to store images and file number.
@@ -49,14 +48,4 @@ def capture():
 	# imgCl30.jpg
 	name = image + number + ex
 
-	# Creating Camera object.
-	camera = picamera.PiCamera()
-
-	# Camera rotation.
-	camera.vflip = True
-
-
-	print ("[*] Capturing image...\n")
-	# capturing image and save into ProgramData directory.
-	camera.capture('ProgramData/'+name)
-	print ("Saving image...")
+	return name

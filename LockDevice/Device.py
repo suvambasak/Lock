@@ -74,7 +74,7 @@ def takeImage( emailId,email=False):
 	try:
 		new_filename = 'ProgramData/'+FileName.get_filename()
 		camera = picamera.PiCamera()
-		camera.capture('new_filename')
+		camera.capture(new_filename)
 
 		# checking for email request ot Take image request.
 		if email:

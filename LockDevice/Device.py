@@ -4,7 +4,8 @@ import threading
 import json
 import time
 import sys
-# import CaptureImage as camera
+import CaptureImage as camera
+# import CaptureImagePC as camera
 
 
 # Send image function.
@@ -72,7 +73,7 @@ def takeImage( emailId,email=False):
 	cameraLock.acquire()
 	try:
 		# execute the CaptureImage.py for take the image.
-		# camera.capture()
+		camera.capture()
 		time.sleep(2)
 
 		# checking for email request ot Take image request.
@@ -206,16 +207,16 @@ try:
 			print ('Requesting for : TAKE IMAGE')
 
 			# creating a thread for take image function.
-			# takeImageFunction = threading.Thread(target=takeImage,args=(request['email'],False), name='functionTakeImage')
-			# takeImageFunction.start()
+			takeImageFunction = threading.Thread(target=takeImage,args=(request['email'],False), name='functionTakeImage')
+			takeImageFunction.start()
 
 
 		# Email request.
 		elif request['request'] == 'Email':
 			print ('Requesting for : EMAIL')
 			# creating a thread for Email image.
-			# emailImageFunction = threading.Thread(target=takeImage,args=(request['email'],True) , name='functionEmailImage')
-			# emailImageFunction.start()
+			emailImageFunction = threading.Thread(target=takeImage,args=(request['email'],True) , name='functionEmailImage')
+			emailImageFunction.start()
 
 except KeyboardInterrupt as e:
 	print('\n-' * 5)

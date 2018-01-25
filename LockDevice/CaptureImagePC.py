@@ -1,5 +1,7 @@
+## importing module.
+import time
+import cv2 as cv
 import os
-import picamera
 
 
 def capture():
@@ -49,14 +51,25 @@ def capture():
 	# imgCl30.jpg
 	name = image + number + ex
 
-	# Creating Camera object.
-	camera = picamera.PiCamera()
-
-	# Camera rotation.
-	camera.vflip = True
-
-
 	print ("[*] Capturing image...\n")
-	# capturing image and save into ProgramData directory.
-	camera.capture('ProgramData/'+name)
+	# creating object of opencv
+	camera = cv.VideoCapture(0)
+
+	# wait for turning the camera on.
+	time.sleep(2)
+
+	# capture the image from camera.
+	_, img = camera.read()
+
+
+	# saving the image.
 	print ("Saving image...")
+	cv.imwrite(os.path.join('ProgramData',name),img)
+
+	# delete the camera object
+	del (camera)
+
+	# showing the image.
+	cv.imshow('Captured',img)
+	cv.waitKey(500)
+	cv.destroyAllWindows()

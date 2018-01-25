@@ -67,13 +67,13 @@ def sendImage(emailId,email = False, bell = False):
 # Take image function.
 def takeImage( emailId,email=False):
 	# initilizing global variables
-	global cameraLock, host, username
+	global cameraLock, host, username, camera
 	print ('\n[||] Email :: ' + str(email))
 	# locking the camera to prevent another thread to use camera.
 	cameraLock.acquire()
 	try:
 		new_filename = 'ProgramData/'+FileName.get_filename()
-		camera = picamera.PiCamera()
+
 		camera.capture(new_filename)
 
 		# checking for email request ot Take image request.
@@ -121,8 +121,10 @@ def callingBell():
 
 
 # global veriable.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera
 
+camera = picamera.PiCamera()
+camera.vflip = True
 # Setting username MAC address Host IPv4 and post number.
 username = 'basak'
 MAC = physicalAddress.getMACHash()

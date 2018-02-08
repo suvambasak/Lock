@@ -5,6 +5,7 @@ class Database:
 	'''Database connection and functions'''
 
 	def __init__(self):
+		self.rootPath = "C:/Users/Suvam Basak/PycharmProjects/Lock/SocketServer/"
 		self.host = 'localhost'
 		self.user = 'root'
 		self.password = ''
@@ -52,7 +53,7 @@ class Database:
 	# function for inserting imageBackup
 	def insertImageBackup(self, username, path):
 		try:
-			path = "/home/suvam/PycharmProjects/Lock/SocketServer/" + path
+			path = self.rootPath + path
 			sql = "INSERT INTO `imageBackup` (`id`, `username`, `path`) VALUES (NULL, '%s', '%s');" % (username, path)
 			self.cursor.execute(sql)
 			# auto commit

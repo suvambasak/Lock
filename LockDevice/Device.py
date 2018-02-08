@@ -105,8 +105,8 @@ def callingBell():
 			cameraLock.acquire()
 
 			try:
-				# execute the FileName.py for take the image.
-				# camera.capture()
+				new_filename = 'ProgramData/' + FileName.get_filename()
+				camera.capture(new_filename)
 				time.sleep(2)
 
 				# sending the image.

@@ -125,7 +125,7 @@ global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camer
 
 redLED = 18
 
-
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(redLED,GPIO.OUT)

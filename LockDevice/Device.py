@@ -125,7 +125,6 @@ global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camer
 
 redLED = 18
 
-GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(redLED,GPIO.OUT)
@@ -235,9 +234,10 @@ except KeyboardInterrupt as e:
 	print('\n-' * 5)
 	print('[*] Connection closing...')
 	device.close()
-	GPIO.cleanup()
 	time.sleep(0.5)
 	# stopping Calling bell loop
 	bellActivator = False
 	print('[*] Stopping Program...')
 	print('[*] Done. Pres Enter to stop...\n\n')
+finally:
+	GPIO.cleanup()

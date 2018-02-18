@@ -6,7 +6,7 @@ import time
 import sys
 import FileName
 import picamera
-
+import RPi.GPIO as GPIO
 
 # Send image function.
 # parameter Email, Bell
@@ -121,7 +121,15 @@ def callingBell():
 
 
 # global veriable.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED
+
+redLED = 18
+
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(redLED,GPIO.OUT)
+
 
 camera = picamera.PiCamera()
 camera.vflip = True
@@ -197,10 +205,14 @@ try:
 		# Lock request.
 		elif request['request'] == 'Lock':
 			print ('Requesting for : LOCK')
+			GPIO.output(redLED, GPIO.LOW)
+			print("Red LED :: OFF")
 
 		# Unlock request.
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
+			GPIO.output(redLED, GPIO.HIGH)
+			print ("Red LED :: ON")
 
 
 		# TakeImage request.
@@ -223,6 +235,7 @@ except KeyboardInterrupt as e:
 	print('\n-' * 5)
 	print('[*] Connection closing...')
 	device.close()
+	GPIO.cleanup()
 	time.sleep(0.5)
 	# stopping Calling bell loop
 	bellActivator = False

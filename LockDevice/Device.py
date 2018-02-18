@@ -123,11 +123,11 @@ def callingBell():
 # global veriable.
 global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED
 
-# redLED = 18
-#
-# GPIO.setmode(GPIO.BCM)
-#
-# GPIO.setup(redLED,GPIO.OUT)
+redLED = 18
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(redLED,GPIO.OUT)
 
 
 camera = picamera.PiCamera()
@@ -204,14 +204,14 @@ try:
 		# Lock request.
 		elif request['request'] == 'Lock':
 			print ('Requesting for : LOCK')
-			# GPIO.output(redLED, GPIO.LOW)
-			# print("Red LED :: OFF")
+			GPIO.output(redLED, GPIO.LOW)
+			print("Red LED :: OFF")
 
 		# Unlock request.
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
-			# GPIO.output(redLED, GPIO.HIGH)
-			# print ("Red LED :: ON")
+			GPIO.output(redLED, GPIO.HIGH)
+			print ("Red LED :: ON")
 
 
 		# TakeImage request.
@@ -239,5 +239,5 @@ except KeyboardInterrupt as e:
 	bellActivator = False
 	print('[*] Stopping Program...')
 	print('[*] Done. Pres Enter to stop...\n\n')
-# finally:
-# 	GPIO.cleanup()
+finally:
+	GPIO.cleanup()

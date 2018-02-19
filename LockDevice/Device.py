@@ -121,8 +121,8 @@ def callingBell():
 # global veriable.
 global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button
 
-redLED = 18
-Button = 14
+redLED = 19
+Button = 26
 
 GPIO.setmode(GPIO.BCM)
 

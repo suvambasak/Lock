@@ -100,15 +100,13 @@ def callingBell():
 		if GPIO.input(Button) == True:
 			print ('[*] Calling Bell pressed.')
 			cameraLock.acquire()
-			time.sleep(0.3)
-
 			try:
-				# new_filename = 'ProgramData/' + FileName.get_filename()
-				# camera.capture(new_filename)
-				time.sleep(2)
+				new_filename = 'ProgramData/' + FileName.get_filename()
+				camera.capture(new_filename)
+				time.sleep(1)
 
 				# sending the image.
-				# sendImage(None,bell=True)
+				sendImage(None,bell=True)
 
 				print ('complete')
 			except Exception as e:

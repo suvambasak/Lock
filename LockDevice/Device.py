@@ -97,20 +97,18 @@ def callingBell():
 	# global variable of camera lock and
 	global cameraLock, bellActivator, host, username
 	while bellActivator:
-		# waiting for calling bell presss
-		# for pc enter is the button for calling bell.
-		press = input()
-		if bellActivator:
+		if GPIO.input(Button) == True:
 			print ('[*] Calling Bell pressed.')
 			cameraLock.acquire()
+			time.sleep(0.3)
 
 			try:
-				new_filename = 'ProgramData/' + FileName.get_filename()
-				camera.capture(new_filename)
+				# new_filename = 'ProgramData/' + FileName.get_filename()
+				# camera.capture(new_filename)
 				time.sleep(2)
 
 				# sending the image.
-				sendImage(None,bell=True)
+				# sendImage(None,bell=True)
 
 				print ('complete')
 			except Exception as e:
@@ -121,13 +119,15 @@ def callingBell():
 
 
 # global veriable.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button
 
 redLED = 18
+Button = 14
 
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(redLED,GPIO.OUT)
+GPIO.setup(Button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 
 camera = picamera.PiCamera()

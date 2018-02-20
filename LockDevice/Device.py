@@ -8,9 +8,42 @@ import FileName
 import picamera
 import RPi.GPIO as GPIO
 
+
+# Distance Function.
+def get_distance():
+	global Trigger, Echo
+
+	# Issue a singal out.
+	GPIO.output(Trigger, True)
+	time.sleep(0.00001)
+	GPIO.output(Trigger, False)
+
+	while GPIO.input(Echo) == False:
+		start = time.time()
+
+	# Get the echo back of the signal. and calculate the time duration.
+	while GPIO.input(Echo) == True:
+		end = time.time()
+
+	sig_time = end - start
+
+	# Distance in Inches
+	distance = sig_time / 0.000148
+	return distance
+
+
+def keep_safe_distance():
+	while True:
+		try:
+			print("\n[||] Distance:>> ", get_distance(), "inch(s)")
+			time.sleep(1)
+		except Exception as e:
+			print('[*] Exception :: keep_safe_distance :: ' + str(e))
+
+
 # Send image function.
 # parameter Email, Bell
-def sendImage(emailId,email = False, bell = False):
+def sendImage(emailId, email=False, bell=False):
 	global host, username
 
 	try:
@@ -60,36 +93,34 @@ def sendImage(emailId,email = False, bell = False):
 		backupServer.close()
 
 	except Exception as e:
-		print ('[*] Exception :: Image send :: ' + str(e))
-
+		print('[*] Exception :: Image send :: ' + str(e))
 
 
 # Take image function.
-def takeImage( emailId,email=False):
+def takeImage(emailId, email=False):
 	# initilizing global variables
 	global cameraLock, host, username, camera
-	print ('\n[||] Email :: ' + str(email))
+	print('\n[||] Email :: ' + str(email))
 	# locking the camera to prevent another thread to use camera.
 	cameraLock.acquire()
 	try:
-		new_filename = 'ProgramData/'+FileName.get_filename()
+		new_filename = 'ProgramData/' + FileName.get_filename()
 
 		camera.capture(new_filename)
 
 		# checking for email request ot Take image request.
 		if email:
-			sendImage(emailId,email=True)
+			sendImage(emailId, email=True)
 		else:
 			sendImage(emailId)
 
 	except Exception as e:
-		print ('[**] Exception :: Take Image function :: ' + str(e))
+		print('[**] Exception :: Take Image function :: ' + str(e))
 	finally:
-		print ('[*] Done')
+		print('[*] Done')
 		# releasing the lock when execution of the method complete.
 		cameraLock.release()
-		print ('\n-' * 5)
-
+		print('\n-' * 5)
 
 
 # calling Bell Event
@@ -98,7 +129,7 @@ def callingBell():
 	global cameraLock, bellActivator, host, username
 	while bellActivator:
 		if GPIO.input(Button) == True:
-			print ('[*] Calling Bell pressed.')
+			print('[*] Calling Bell pressed.')
 			cameraLock.acquire()
 			try:
 				new_filename = 'ProgramData/' + FileName.get_filename()
@@ -106,27 +137,29 @@ def callingBell():
 				time.sleep(1)
 
 				# sending the image.
-				sendImage(None,bell=True)
+				sendImage(None, bell=True)
 
-				print ('complete')
+				print('complete')
 			except Exception as e:
-				print ('[**] Exception :: callingBell :: ' + str(e))
+				print('[**] Exception :: callingBell :: ' + str(e))
 			finally:
 				cameraLock.release()
 
 
-
 # global veriable.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo
 
 redLED = 19
 Button = 26
+Trigger = 13
+Echo = 6
 
 GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(redLED,GPIO.OUT)
+GPIO.setup(redLED, GPIO.OUT)
 GPIO.setup(Button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
+GPIO.setup(Trigger, GPIO.OUT)
+GPIO.setup(Echo, GPIO.IN)
 
 camera = picamera.PiCamera()
 camera.vflip = True
@@ -143,9 +176,6 @@ cameraLock = threading.Lock()
 
 callingBellThread = threading.Thread(target=callingBell, name="bell")
 
-
-
-
 # creating identity json
 info = {}
 info['device'] = 'LockDevice'
@@ -154,15 +184,14 @@ info['mac'] = MAC
 jsonInfo = json.dumps(info)
 
 # socket object.
-device  = socket.socket()
+device = socket.socket()
 
 # connecting to main server
 try:
-	device.connect((host,post))
+	device.connect((host, post))
 	device.send(str.encode(jsonInfo))
 except Exception as e:
-	print ('[**] Exception :: Connecting to Main server :: ' + str(e))
-
+	print('[**] Exception :: Connecting to Main server :: ' + str(e))
 
 # off/on try catch block.
 try:
@@ -174,7 +203,7 @@ try:
 			request = device.recv(1024).decode()
 			# loads the JSON.
 			request = json.loads(request)
-			print (request)
+			print(request)
 
 		except Exception as e:
 			print('[**] Exception :: receiving the data :: ' + str(e))
@@ -201,7 +230,7 @@ try:
 
 		# Lock request.
 		elif request['request'] == 'Lock':
-			print ('Requesting for : LOCK')
+			print('Requesting for : LOCK')
 			GPIO.output(redLED, GPIO.LOW)
 			print("Red LED :: OFF")
 
@@ -209,23 +238,25 @@ try:
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
 			GPIO.output(redLED, GPIO.HIGH)
-			print ("Red LED :: ON")
+			print("Red LED :: ON")
 
 
 		# TakeImage request.
 		elif request['request'] == 'TakeImage':
-			print ('Requesting for : TAKE IMAGE')
+			print('Requesting for : TAKE IMAGE')
 
 			# creating a thread for take image function.
-			takeImageFunction = threading.Thread(target=takeImage,args=(request['email'],False), name='functionTakeImage')
+			takeImageFunction = threading.Thread(target=takeImage, args=(request['email'], False),
+			                                     name='functionTakeImage')
 			takeImageFunction.start()
 
 
 		# Email request.
 		elif request['request'] == 'Email':
-			print ('Requesting for : EMAIL')
+			print('Requesting for : EMAIL')
 			# creating a thread for Email image.
-			emailImageFunction = threading.Thread(target=takeImage,args=(request['email'],True) , name='functionEmailImage')
+			emailImageFunction = threading.Thread(target=takeImage, args=(request['email'], True),
+			                                      name='functionEmailImage')
 			emailImageFunction.start()
 
 except KeyboardInterrupt as e:

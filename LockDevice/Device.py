@@ -25,11 +25,14 @@ def get_distance():
 	while GPIO.input(Echo) == True:
 		end = time.time()
 
-	sig_time = end - start
-
-	# Distance in Inches
-	distance = sig_time / 0.000148
-	return distance
+	try:
+		sig_time = end - start
+		# Distance in Inches
+		distance = sig_time / 0.000148
+		return distance
+	except Exception as e:
+		print('[*] Exception :: get_distance :: ' + str(e))
+		return 100.0
 
 
 def keep_safe_distance():
@@ -151,8 +154,8 @@ global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camer
 
 redLED = 19
 Button = 26
-Trigger = 13
-Echo = 6
+Trigger = 6
+Echo = 13
 
 GPIO.setmode(GPIO.BCM)
 

@@ -19,12 +19,6 @@ print ('---------------------------')
 print ('Press Enter to continue..')
 input()
 
-# Camera test function.
-def test_camera():
-	camera = picamera.PiCamera()
-	camera.capture('../CameraTest.png')
-
-
 # LED Test function.
 def test_LED():
 	print ('------------ LED Test --------------')
@@ -92,9 +86,6 @@ try:
 		print ('\n'*3)
 		print ('Starting All Test.')
 
-		print('\n' * 3)
-		test_camera()
-
 		print ('\n'*3)
 		test_LED()
 
@@ -122,7 +113,8 @@ try:
 			elif selection == 3:
 				test_distance()
 			elif selection == 4:
-				test_camera()
+				camera = picamera.PiCamera()
+				camera.capture('../CameraTest.png')
 			elif selection == 0:
 				counter = False
 			else:

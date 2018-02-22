@@ -94,7 +94,21 @@ try:
 		print('\n' * 3)
 		test_distance()
 	elif req == 'n' or req == 'N':
-		pass
+		counter = True
+		while counter:
+			print ('Select Component\n\n')
+			print ('LED ::> 1')
+			print('Button ::> 2')
+			print('HC-SRO4 ::> 3')
+
+			selection = int(input('\n Your Selection : '))
+
+			if selection == 1:
+				test_LED()
+			elif selection == 2:
+				test_button()
+			elif selection == 3:
+				test_distance()
 	else:
 		print ('Exit.')
 

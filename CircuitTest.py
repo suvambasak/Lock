@@ -18,18 +18,6 @@ print ('---------------------------')
 print ('Press Enter to continue..')
 input()
 
-
-
-try:
-	pass
-except Exception as e:
-	print ('[*] Exception :: '+str(e))
-finally:
-	GPIO.cleanup()
-
-
-
-
 ## LED Testing.
 def test_LED():
 	print ('------------LED Test--------------')
@@ -39,7 +27,15 @@ def test_LED():
 	for i in range(0,3):
 		time.sleep(1)
 	print ("LED OFF")
-	GPIO.output(19,GPIO.LOW)
+	GPIO.output(LED,GPIO.LOW)
+
+try:
+	test_LED()
+except Exception as e:
+	print ('[*] Exception :: '+str(e))
+finally:
+	GPIO.cleanup()
+
 
 
 

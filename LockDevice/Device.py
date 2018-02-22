@@ -274,4 +274,5 @@ except KeyboardInterrupt as e:
 	print('[*] Stopping Program...')
 	print('[*] Done. Pres Enter to stop...\n\n')
 finally:
+	camera.close()
 	GPIO.cleanup()

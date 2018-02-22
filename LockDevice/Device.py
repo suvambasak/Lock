@@ -35,11 +35,18 @@ def get_distance():
 		return 100.0
 
 
+def start_count_down():
+	pass
+
+
 def keep_safe_distance():
-	while True:
+	global sensorThreadStatus, distanceSensing
+	while sensorThreadStatus:
 		try:
-			print("\n[||] Distance:>> ", get_distance(), "inch(s)")
-			time.sleep(1)
+			currentDistance = get_distance()
+			if currentDistance < 25 and distanceSensing:
+				print('Onject Detected at : {} inch'.format(currentDistance))
+				start_count_down()
 		except Exception as e:
 			print('[*] Exception :: keep_safe_distance :: ' + str(e))
 
@@ -150,7 +157,7 @@ def callingBell():
 
 
 # global veriable.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, distanceSensing
 
 redLED = 19
 Button = 26
@@ -166,6 +173,7 @@ GPIO.setup(Echo, GPIO.IN)
 
 camera = picamera.PiCamera()
 camera.vflip = True
+
 # Setting username MAC address Host IPv4 and post number.
 username = 'basak'
 MAC = physicalAddress.getMACHash()
@@ -173,12 +181,15 @@ host = str(sys.argv[1])
 post = 9000
 
 bellActivator = True
+sensorThreadStatus = True
+distanceSensing = True
 # thread locks || one camera lock || one door lock.
 doorLock = threading.Lock()
 cameraLock = threading.Lock()
 
 callingBellThread = threading.Thread(target=callingBell, name="bell")
 keepSafeDistanceThread = threading.Thread(target=keep_safe_distance, name="distance")
+
 
 # creating identity json
 info = {}
@@ -271,6 +282,7 @@ except KeyboardInterrupt as e:
 	time.sleep(0.5)
 	# stopping Calling bell loop
 	bellActivator = False
+	sensorThreadStatus = False
 	print('[*] Stopping Program...')
 	print('[*] Done. Pres Enter to stop...\n\n')
 finally:

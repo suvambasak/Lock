@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import picamera
 import time
 
 LED = 19
@@ -17,6 +18,12 @@ print ('Echo : ',ECHO)
 print ('---------------------------')
 print ('Press Enter to continue..')
 input()
+
+# Camera test function.
+def test_camera():
+	camera = picamera.PiCamera()
+	camera.capture('../CameraTest.png')
+
 
 # LED Test function.
 def test_LED():
@@ -54,7 +61,7 @@ def test_button():
 
 # Distance Test function.
 def test_distance():
-	print ('--------- Distance Test -------')
+	print ('--------- Distance Test ---------')
 
 	GPIO.setup(TRIG, GPIO.OUT)
 	GPIO.setup(ECHO, GPIO.IN)
@@ -85,6 +92,9 @@ try:
 		print ('\n'*3)
 		print ('Starting All Test.')
 
+		print('\n' * 3)
+		test_camera()
+
 		print ('\n'*3)
 		test_LED()
 
@@ -100,6 +110,7 @@ try:
 			print ('LED ::> 1')
 			print('Button ::> 2')
 			print('HC-SRO4 ::> 3')
+			print('Pi-Camera ::> 4')
 			print('EXIT ::> 0')
 
 			selection = int(input('\n Your Selection : '))
@@ -110,6 +121,8 @@ try:
 				test_button()
 			elif selection == 3:
 				test_distance()
+			elif selection == 4:
+				test_camera()
 			elif selection == 0:
 				counter = False
 			else:

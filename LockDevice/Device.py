@@ -175,6 +175,7 @@ doorLock = threading.Lock()
 cameraLock = threading.Lock()
 
 callingBellThread = threading.Thread(target=callingBell, name="bell")
+keepSafeDistanceThread = threading.Thread(target=keep_safe_distance, name="distance")
 
 # creating identity json
 info = {}
@@ -195,8 +196,9 @@ except Exception as e:
 
 # off/on try catch block.
 try:
-	# starting calling bell thread.
+	# starting calling bell, safe distance thread.
 	callingBellThread.start()
+	keepSafeDistanceThread.start()
 	# main loop for receiving and replying message/request.
 	while True:
 		try:

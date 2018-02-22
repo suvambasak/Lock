@@ -100,6 +100,7 @@ try:
 			print ('LED ::> 1')
 			print('Button ::> 2')
 			print('HC-SRO4 ::> 3')
+			print('EXIT ::> 0')
 
 			selection = int(input('\n Your Selection : '))
 
@@ -109,6 +110,10 @@ try:
 				test_button()
 			elif selection == 3:
 				test_distance()
+			elif selection == 0:
+				counter = False
+			else:
+				print ('Select Again')
 	else:
 		print ('Exit.')
 

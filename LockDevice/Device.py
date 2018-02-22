@@ -47,8 +47,10 @@ def keep_safe_distance():
 			if currentDistance < 25 and distanceSensing:
 				print('Onject Detected at : {} inch'.format(currentDistance))
 				start_count_down()
+			time.sleep(1)
 		except Exception as e:
 			print('[*] Exception :: keep_safe_distance :: ' + str(e))
+			time.sleep(5)
 
 
 # Send image function.
@@ -286,5 +288,6 @@ except KeyboardInterrupt as e:
 	print('[*] Stopping Program...')
 	print('[*] Done. Pres Enter to stop...\n\n')
 finally:
+	sensorThreadStatus = False
 	camera.close()
 	GPIO.cleanup()

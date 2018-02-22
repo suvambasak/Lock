@@ -36,7 +36,7 @@ def get_distance():
 
 
 def start_count_down():
-	pass
+	time.sleep(5)
 
 
 def keep_safe_distance():

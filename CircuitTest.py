@@ -6,6 +6,9 @@ BUTTON = 26
 TRIG = 6
 ECHO = 13
 
+GPIO.setmode(GPIO.BCM)
+
+
 print ('####### Check Pin Numbers #########')
 print ('LED : ',LED)
 print ('Button : ',BUTTON)
@@ -17,21 +20,27 @@ input()
 
 
 
-GPIO.setmode(GPIO.BCM)
+try:
+	pass
+except Exception as e:
+	print ('[*] Exception :: '+str(e))
+finally:
+	GPIO.cleanup()
+
+
 
 
 ## LED Testing.
-print ('------------LED Test--------------')
-GPIO.setup(LED,GPIO.OUT)
+def test_LED():
+	print ('------------LED Test--------------')
+	GPIO.setup(LED,GPIO.OUT)
+	print ("LED ON")
+	GPIO.output(LED,GPIO.HIGH)
+	for i in range(0,3):
+		time.sleep(1)
+	print ("LED OFF")
+	GPIO.output(19,GPIO.LOW)
 
-print ("LED ON")
-GPIO.output(LED,GPIO.HIGH)
-for i in range(0,3):
-    time.sleep(1)
-print ("LED OFF")
-GPIO.output(19,GPIO.LOW)
-
-time.sleep(1.5)
 
 
 ## Button Test.
@@ -75,6 +84,3 @@ try:
     print ('Distance : {} inchs'.format(distance))
 except Exception as e:
     print ('[**] Exception :: '+str(e))
-
-
-GPIO.cleanup()

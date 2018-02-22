@@ -18,7 +18,7 @@ print ('---------------------------')
 print ('Press Enter to continue..')
 input()
 
-## LED Testing.
+## LED Test function.
 def test_LED():
 	print ('------------LED Test--------------')
 	GPIO.setup(LED,GPIO.OUT)
@@ -29,8 +29,21 @@ def test_LED():
 	print ("LED OFF")
 	GPIO.output(LED,GPIO.LOW)
 
+## Button Test function.
+def test_button():
+	print ('----------Button Test-----------')
+	GPIO.setup(BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+	push = 0
+	try:
+		while push < 3:
+			if GPIO.input(26) == True:
+				push+=1
+				print ("Push :: ",push)
+			time.sleep(0.3)
+	except Exception as e:
+		print ('[*] Exception ::'+str(e))
 try:
-	test_LED()
+	test_button()
 except Exception as e:
 	print ('[*] Exception :: '+str(e))
 finally:
@@ -39,44 +52,38 @@ finally:
 
 
 
-## Button Test.
-print ('----------Button Test-----------')
-GPIO.setup(BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-push = 0
-try:
-    while push < 3:
-        if GPIO.input(26) == True:
-            push+=1
-            print ("Push :: ",push)
-        time.sleep(0.3)
-except Exception as e:
-    print ('[*] Exception ::'+e)
+
+
+
+
+
+
 
 
 ## Distance Test.
-print ('---------Distance Test-------')
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
-
-GPIO.output(TRIG, True)
-time.sleep(0.00001)
-GPIO.output(TRIG, False)
-
-while GPIO.input(ECHO) == False:
-    start = time.time()
-
-while GPIO.input(ECHO) == True:
-    end = time.time()
-
-try:
-    sig_time = end-start
-    
-    #cm:
-    distance = sig_time / 0.000058
-    print ('\nDistance : {} cm'.format(distance))
-    
-    #inches:
-    distance = sig_time / 0.000148
-    print ('Distance : {} inchs'.format(distance))
-except Exception as e:
-    print ('[**] Exception :: '+str(e))
+# print ('---------Distance Test-------')
+# GPIO.setup(TRIG, GPIO.OUT)
+# GPIO.setup(ECHO, GPIO.IN)
+#
+# GPIO.output(TRIG, True)
+# time.sleep(0.00001)
+# GPIO.output(TRIG, False)
+#
+# while GPIO.input(ECHO) == False:
+#     start = time.time()
+#
+# while GPIO.input(ECHO) == True:
+#     end = time.time()
+#
+# try:
+#     sig_time = end-start
+#
+#     #cm:
+#     distance = sig_time / 0.000058
+#     print ('\nDistance : {} cm'.format(distance))
+#
+#     #inches:
+#     distance = sig_time / 0.000148
+#     print ('Distance : {} inchs'.format(distance))
+# except Exception as e:
+#     print ('[**] Exception :: '+str(e))

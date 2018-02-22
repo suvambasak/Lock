@@ -75,7 +75,7 @@ def test_distance():
 		print ('\nDistance : {} cm'.format(distance))
 
 		distance = sig_time / 0.000148
-		print ('Distance : {} inchs'.format(distance))
+		print ('Distance : {} inch'.format(distance))
 	except Exception as e:
 		print ('[**] Exception :: '+str(e))
 
@@ -96,7 +96,7 @@ try:
 	elif req == 'n' or req == 'N':
 		counter = True
 		while counter:
-			print ('Select Component\n\n')
+			print ('\n\nSelect Component\n\n')
 			print ('LED ::> 1')
 			print('Button ::> 2')
 			print('HC-SRO4 ::> 3')

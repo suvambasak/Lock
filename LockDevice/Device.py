@@ -58,7 +58,7 @@ def keep_safe_distance():
 			if currentDistance < 25:
 				print('Object Detected at : {} inch'.format(currentDistance))
 				start_count_down()
-			elif currentDistance > 40:
+			elif currentDistance > 40 and callingBellPressed:
 				callingBellPressed = False
 				print("[*] Calling Bell Presss :: Reset")
 			time.sleep(1)

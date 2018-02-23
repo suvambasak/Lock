@@ -35,7 +35,7 @@ def get_distance():
 
 # Send image function.
 # parameter Email, Bell
-def sendImage(emailId, email=False, bell=False):
+def send_image(emailId, email=False, bell=False):
 	global host, username
 
 	try:
@@ -89,7 +89,7 @@ def sendImage(emailId, email=False, bell=False):
 
 
 # Take image function.
-def takeImage(emailId, email=False):
+def take_image(emailId, email=False):
 	# initilizing global variables
 	global cameraLock, host, username, camera
 	print('\n[||] Email :: ' + str(email))
@@ -102,9 +102,9 @@ def takeImage(emailId, email=False):
 
 		# checking for email request ot Take image request.
 		if email:
-			sendImage(emailId, email=True)
+			send_image(emailId, email=True)
 		else:
-			sendImage(emailId)
+			send_image(emailId)
 
 	except Exception as e:
 		print('[**] Exception :: Take Image function :: ' + str(e))
@@ -136,7 +136,7 @@ def start_count_down():
 
 			# sending the image.
 			print ("[*] Sending SPY Image")
-			sendImage(None, bell=True)
+			send_image(None, bell=True)
 		except Exception as e:
 			print('[**] Exception :: start_count_down :: ' + str(e))
 		finally:
@@ -160,7 +160,7 @@ def keep_safe_distance():
 			time.sleep(5)
 
 # calling Bell Event
-def callingBell():
+def calling_bell():
 	# global variable of camera lock and
 	global cameraLock, bellActivator, host, username, callingBellPressed
 
@@ -176,11 +176,11 @@ def callingBell():
 				time.sleep(1)
 
 				# sending the image.
-				sendImage(None, bell=True)
+				send_image(None, bell=True)
 
 				print('complete')
 			except Exception as e:
-				print('[**] Exception :: callingBell :: ' + str(e))
+				print('[**] Exception :: calling_bell :: ' + str(e))
 			finally:
 				cameraLock.release()
 
@@ -218,7 +218,7 @@ MIN_DISTANCE = 25
 doorLock = threading.Lock()
 cameraLock = threading.Lock()
 
-callingBellThread = threading.Thread(target=callingBell, name="bell")
+callingBellThread = threading.Thread(target=calling_bell, name="bell")
 keepSafeDistanceThread = threading.Thread(target=keep_safe_distance, name="distance")
 
 # creating identity json
@@ -293,7 +293,7 @@ try:
 			print('Requesting for : TAKE IMAGE')
 
 			# creating a thread for take image function.
-			takeImageFunction = threading.Thread(target=takeImage, args=(request['email'], False),
+			takeImageFunction = threading.Thread(target=take_image, args=(request['email'], False),
 			                                     name='functionTakeImage')
 			takeImageFunction.start()
 
@@ -302,7 +302,7 @@ try:
 		elif request['request'] == 'Email':
 			print('Requesting for : EMAIL')
 			# creating a thread for Email image.
-			emailImageFunction = threading.Thread(target=takeImage, args=(request['email'], True),
+			emailImageFunction = threading.Thread(target=take_image, args=(request['email'], True),
 			                                      name='functionEmailImage')
 			emailImageFunction.start()
 

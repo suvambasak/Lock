@@ -37,6 +37,7 @@ def get_distance():
 
 def start_count_down():
 	print ('[*] Count down start.')
+
 	for i in range(0, 6):
 		time.sleep(1)
 
@@ -45,7 +46,7 @@ def start_count_down():
 			print("[*] Exit from count down.")
 			return
 
-		print('Object now at : {} inch'.format(currentDistance))
+		print('Object now at {} second ::: {} inch'.format(i, currentDistance))
 	print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Take Image >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
 

@@ -2,8 +2,7 @@
 #
 # print (FileName.get_filename())
 
-flag = False
-flag2 = True
+currentDistance = 10
+i = 30
 
-if flag2 and not flag:
-	print ('Hello')
+print('Object now at {} second ::: {} inch'.format(i,currentDistance))

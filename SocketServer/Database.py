@@ -10,7 +10,12 @@ class Database:
 		self.user = 'root'
 		self.password = ''
 		self.dbname = 'lockdb'
-		self.db = pymysql.connect(self.host, self.user, self.password, self.dbname)
+		try:
+			self.db = pymysql.connect(self.host, self.user, self.password, self.dbname)
+			print("[*] Database Connected.")
+		except Exception as e:
+			print("\n\n[**] Exception :: Database.py __init__ :: " + str(e))
+			print ('\n\n')
 		self.db.autocommit(True)
 		self.cursor = self.db.cursor()
 

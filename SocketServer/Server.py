@@ -12,8 +12,8 @@ import os
 import urllib.request
 
 
-###############################################    NOTIFICATION   ##########################################################
-def onOffNotification(username, status='NONE', imageId='NONE'):
+# -----------------------------    NOTIFICATION   ------------------------------------------
+def on_off_notification(username, status='NONE', image_id='NONE'):
 	if status == 'NONE':
 		return
 	if status == 'ON':
@@ -24,14 +24,13 @@ def onOffNotification(username, status='NONE', imageId='NONE'):
 			'http://localhost/Lock/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Offline&type=ONOFF&imageId=null')
 	elif status == 'IMAGE':
 		response = urllib.request.urlopen(
-			'http://localhost/Lock/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + imageId)
+			'http://localhost/Lock/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + image_id)
 	print(response.read())
 
 
-###############################################   BACK-UP SOCKET SERVER CLASS   ############################################
-
+# ---------------------   BACK-UP SOCKET SERVER CLASS   ------------------------
 class BackupServer:
-	'Back up server - Containing socket server & connection handler & backup function & notify with photo via email'
+	"""Back up server - Containing socket server & connection handler & backup function & notify with photo via email"""
 
 	def __init__(self, host, port):
 		# initilizing class variables.
@@ -49,25 +48,24 @@ class BackupServer:
 			print('\n[*] BACK-UP server is running at -' + str((self.host, self.port)))
 
 			# calling the backup connection handler function.
-			self.backUpServerConnectionHandler()
+			self.backup_server_connection_handler()
 		except Exception as e:
 			print('\n[**] Exception :: Back up Server address bind :: ' + str(e))
 
+	# connection handler function. accept connection and call backup to take image backup.
 
-			# connection handler function. accept connection and call backup to take image backup.
-
-	def backUpServerConnectionHandler(self):
+	def backup_server_connection_handler(self):
 		print('\n[*] Back-up server connection handler is running.')
 
 		# global variable for to controling backup server.
-		global backupServerControl
+		global backup_server_control
 
-		while backupServerControl:
+		while backup_server_control:
 			try:
 				# accepting the connection.
 				connection, address = self.server.accept()
 
-				if backupServerControl:
+				if backup_server_control:
 					print('\n[*] Back-up Server Connected by - ' + str(address))
 					# creating a thread for each connection.
 					start_new_thread(self.backup, (connection,))
@@ -77,9 +75,7 @@ class BackupServer:
 			except Exception as e:
 				print('[**] Exception :: Back-up server connection accept :: ' + str(e))
 
-
-				# function for taking backup.
-
+	# function for taking backup.
 	def backup(self, connection):
 		try:
 			# get jSON of filename and username.
@@ -100,13 +96,13 @@ class BackupServer:
 
 				# fetching file.
 				while True:
-					fileContent = connection.recv(2048)
+					file_content = connection.recv(2048)
 					# checking file content.
-					if not fileContent:
+					if not file_content:
 						break
 
 					# Writing the file conetnt into the file.
-					file.write(fileContent)
+					file.write(file_content)
 
 				# close the file fetching complete.
 				file.close()
@@ -114,18 +110,18 @@ class BackupServer:
 				# file encoding.
 				path = ImageEncoder.encode('ServerBackup/' + filename['username'] + '/' + filename['name'])
 				# updating the Database and getting tuple id
-				updateId = self.database.insertImageBackup(filename['username'], path)
+				update_id = self.database.insert_image_backup(filename['username'], path)
 
 				print('\n[*] ' + filename['name'] + ' Back-up Done.')
 
 				# sending image to owner as email.
 				if filename['email'] == 'YES':
-					email.sendImage(filename['username'],
-									'ServerBackup/' + filename['username'] + '/' + filename['name'])
+					email.send_image(filename['username'],
+					                 'ServerBackup/' + filename['username'] + '/' + filename['name'])
 				elif filename['bell'] == 'YES':
-					onOffNotification(filename['username'], status='IMAGE', imageId=str(updateId))
+					on_off_notification(filename['username'], status='IMAGE', image_id=str(update_id))
 				else:
-					self.database.submitNotify(filename['username'], filename['emailId'],'Image Taken', updateId)
+					self.database.submit_notify(filename['username'], filename['emailId'], 'Image Taken', update_id)
 
 				# remove the image file.
 				os.remove('ServerBackup/' + filename['username'] + '/' + filename['name'])
@@ -133,16 +129,16 @@ class BackupServer:
 			print('[**] Exception :: backup :: ' + str(e))
 
 
-#################################################### LOCK DEVICE CLASS ###################################################
-
+# --------------------------- LOCK DEVICE CLASS -------------------------------------------
 class LockDevice:
-	'Lock Device class - Containing Device online tracker & directory create method & connected device list (connectionList).'
-	# initilization of global connection dictionary.
-	global connectionList
+	"""Lock Device class - Containing Device online tracker & directory create method & connected device list (
+	connectionList). """
 
-	# initilization function of the class.
+	global connection_list
+
+	# initial function of the class.
 	def __init__(self, connection, deviceIp, username, mac):
-		# initilizing the class variables.
+		# initilize the class variables.
 		self.connection = connection
 		self.ip = deviceIp
 		self.username = username
@@ -150,26 +146,26 @@ class LockDevice:
 		self.database = db.Database()
 
 		# updating global connection dictionary
-		connectionList[username] = connection
+		connection_list[username] = connection
 		# inserting into database.
-		self.database.insertOnlineDevice(self.username)
+		self.database.insert_online_device(self.username)
 
 		# calling the class function.
-		self.createDirectory()
-		self.printDetails()
+		self.create_directory()
+		self.print_details()
 		# creating one thread for online Tracking function.
-		start_new_thread(self.onlineTrack, (True,))
+		start_new_thread(self.online_track, (True,))
 		# Send notification to all phones.
-		onOffNotification(self.username, status='ON')
+		on_off_notification(self.username, status='ON')
 
 	# online tracking function
-	def onlineTrack(self, loop):
+	def online_track(self, loop):
 		# track message dictionary.
 		track = {}
 		track['request'] = ''
 		track['message'] = 'online'
 		# converting into JSON.
-		jsonTrack = json.dumps(track)
+		json_track = json.dumps(track)
 
 		while loop:
 			try:
@@ -177,37 +173,36 @@ class LockDevice:
 				# track['request'] = ''
 				# track['message'] = 'online'
 
-				self.connection.send(str.encode(jsonTrack))
+				self.connection.send(str.encode(json_track))
 				time.sleep(3)
 
 				# Getting reply from Lock device.
 				# track['message'] = 'online'
 				# track['reply'] = 'online'
-				deviceReply = self.connection.recv(2014).decode()
+				device_reply = self.connection.recv(2014).decode()
 
-				deviceReply = json.loads(deviceReply)
+				device_reply = json.loads(device_reply)
 
 				# checking reply
 				# if not reply the exit the loop and destroy the object.
-				if deviceReply['reply'] != 'online':
+				if device_reply['reply'] != 'online':
 					loop = False
 					break
 
-				print('\n[*]Lock :: ' + str(self.username) + ' IP :: ' + str(self.ip) + '  STATUS ' + str(deviceReply))
+				print('\n[*]Lock :: ' + str(self.username) + ' IP :: ' + str(self.ip) + '  STATUS ' + str(device_reply))
 			except Exception as e:
 				print('\n[**] Exception Online Tracking :: ' + str(e))
 				loop = False
 
+		# function for creating the directory for the username.
 
-				# function for creating the directory for the username.
-
-	def createDirectory(self):
+	def create_directory(self):
 		if not os.path.exists('ServerBackup/' + self.username):
 			os.makedirs('ServerBackup/' + self.username)
 
-			# function for printing details.
+	# function for printing details.
 
-	def printDetails(self):
+	def print_details(self):
 		print('\n')
 		print('\n\n[*] LOCK >> username ' + str(self.username) + ' IP ' + str(self.ip) + ' Initilazing done.')
 		print('\n')
@@ -215,21 +210,21 @@ class LockDevice:
 	# function for self destroy.
 	def __del__(self):
 		# delete from online db.
-		self.database.deleteOnlineDevice(self.username)
+		self.database.delete_online_device(self.username)
 		# sending a email to owner for the lock device is disconnected.
-		start_new_thread(email.disconnectAlert, (self.username,))
+		start_new_thread(email.disconnect_alert, (self.username,))
 		# Send notification to all phones
-		onOffNotification(self.username, status='OFF')
+		on_off_notification(self.username, status='OFF')
 
 		# deleting the connection from global connection dictionary.
-		del connectionList[self.username]
+		del connection_list[self.username]
 		class_name = self.__class__.__name__
 		print('\n\n', self.username, 'destroyed')
 
 
 ################################################    MAIN SERVER CONNECTION HANDLER FUNCTION    ###########################
 
-def connectionHandler(connection, ip):
+def connection_handler(connection, ip):
 	try:
 		request = connection.recv(1024).decode()
 		request = json.loads(request)
@@ -251,7 +246,7 @@ def connectionHandler(connection, ip):
 	# checking device type phone.
 	if request['device'] == 'Phone':
 		# checking android ID.
-		if (database.checkAndroidId(request['username'], request['androidId']) or database.checkMemberAndroidId(
+		if (database.check_android_id(request['username'], request['androidId']) or database.check_member_android_id(
 				request['username'], request['androidId'])):
 
 			# printing details.
@@ -265,19 +260,20 @@ def connectionHandler(connection, ip):
 			print('[**] Device Android ID Matched.')
 
 			# initilizing global connection list.
-			global connectionList
+			global connection_list
 
 			# checking connection exist or not.
-			if request['username'] in connectionList:
+			if request['username'] in connection_list:
 				# starting thread for forwarding the request.
 				# passing request, Lock connection object, phone connection object as agrument.
-				start_new_thread(Forward.requestForward,
-								 (request['request'], request['email'], connectionList[request['username']], connection))
+				start_new_thread(Forward.request_forward,
+				                 (
+					                 request['request'], request['email'], connection_list[request['username']],
+					                 connection))
 			else:
 				# if the connection is not present in the connection list.
 				# sending reply.
 				connection.sendall(str.encode('Offline.\n'))
-
 
 		# if android ID is not matching.
 		else:
@@ -285,12 +281,11 @@ def connectionHandler(connection, ip):
 			# sending reply.
 			connection.sendall(str.encode('Un-known Device.\n'))
 
-
 	# checking the device type Lock Device.
 	elif request['device'] == 'LockDevice':
 
 		# Checking MAC address of the lock
-		if (database.checkLockMAC(request['username'], request['mac'])):
+		if (database.check_lock_mac(request['username'], request['mac'])):
 
 			# printing details.
 			print('\n[**] Device Details::\n')
@@ -306,8 +301,8 @@ def connectionHandler(connection, ip):
 		# if MAC Address is not matched.
 		else:
 			print('[**] Lock Device MAC Address is not Matched.')
-			# Sending reply.
-			# connection.sendall(str.encode('MAC Address is not matched...'))
+	# Sending reply.
+	# connection.sendall(str.encode('MAC Address is not matched...'))
 
 	# when incoming data fromat is unknown.
 	else:
@@ -315,28 +310,33 @@ def connectionHandler(connection, ip):
 		print('[***] Fully Unknown Device.')
 
 
-######################################################    MAIN FUNCTION     ##############################################
+# ------------------------- MAIN FUNCTION ----------------------
 
 # check for serverBackup path and create.
 if not os.path.exists('ServerBackup'):
 	os.makedirs('ServerBackup')
 
 # global variables :: host and usernameList.
-global host, connectionList, phoneConnectionList, backupServerControl
+global host, connection_list, phone_connection_list, backup_server_control
+
 # backup server Control
-backupServerControl = True
-# Declare connectionList a Dictionary.
-connectionList = {}
-phoneConnectionList = {}
+backup_server_control = True
+
+# Declare connection List a Dictionary.
+connection_list = {}
+phone_connection_list = {}
+
 # Server IPv4 and port and backup port.
 host = socket.gethostbyname(socket.gethostname())
 port = 9000
 backupPort = 9999
+
 # creating server object.
 server = socket.socket()
 
 # Creating a thread of backup server.
 backup = threading.Thread(target=BackupServer, args=(host, backupPort), name="backupThread")
+
 # binding IP and port number.
 try:
 	server.bind((host, port))
@@ -360,9 +360,11 @@ try:
 		try:
 			connection, address = server.accept()
 			print('\n[**] Main Server connected by - ' + str(address))
-			start_new_thread(connectionHandler, (connection, address[0]))
+			start_new_thread(connection_handler, (connection, address[0]))
+
 		except Exception as e:
 			print('\n[**] Exception :: server connection :: ' + e)
+
 except KeyboardInterrupt as e:
 	print('-\n' * 5)
 	print('\n[*] Stopping Main Server....')
@@ -370,11 +372,11 @@ except KeyboardInterrupt as e:
 	server.close()
 	print('\n[*] Done.')
 
-	# stoppin the backup server by deleting object.
+	# stopping the backup server by deleting object.
 	print('\n[*] Stopping the Back-up Server...')
 
 	# Stopping the loop.
-	backupServerControl = False
+	backup_server_control = False
 	# dummy client to exit the loop.
 	dummy = socket.socket()
 	dummy.connect((host, backupPort))
@@ -384,6 +386,7 @@ except KeyboardInterrupt as e:
 
 	time.sleep(0.5)
 	print('\n[*] Done\n\n')
+
 finally:
 	database = db.Database()
-	database.deleteAllOnlineDevice()
+	database.delete_all_online_device()

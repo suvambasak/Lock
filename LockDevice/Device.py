@@ -36,7 +36,17 @@ def get_distance():
 
 
 def start_count_down():
-	time.sleep(5)
+	print ('[*] Count down start.')
+	for i in range(0, 6):
+		time.sleep(1)
+
+		currentDistance = get_distance()
+		if currentDistance > 25 or callingBellPressed:
+			print("[*] Exit from count down.")
+			return
+
+		print('Object now at : {} inch'.format(currentDistance))
+	print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Take Image >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
 
 def keep_safe_distance():
@@ -45,7 +55,7 @@ def keep_safe_distance():
 		try:
 			currentDistance = get_distance()
 			if currentDistance < 25 and distanceSensing:
-				print('Onject Detected at : {} inch'.format(currentDistance))
+				print('Object Detected at : {} inch'.format(currentDistance))
 				start_count_down()
 			time.sleep(1)
 		except Exception as e:
@@ -158,8 +168,8 @@ def callingBell():
 				cameraLock.release()
 
 
-# global veriable.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, distanceSensing
+# global veriables.
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, distanceSensing, callingBellPressed
 
 redLED = 19
 Button = 26
@@ -185,13 +195,13 @@ post = 9000
 bellActivator = True
 sensorThreadStatus = True
 distanceSensing = True
+callingBellPressed = False
 # thread locks || one camera lock || one door lock.
 doorLock = threading.Lock()
 cameraLock = threading.Lock()
 
 callingBellThread = threading.Thread(target=callingBell, name="bell")
 keepSafeDistanceThread = threading.Thread(target=keep_safe_distance, name="distance")
-
 
 # creating identity json
 info = {}

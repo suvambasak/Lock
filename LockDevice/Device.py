@@ -8,6 +8,7 @@ import FileName
 import picamera
 import RPi.GPIO as GPIO
 
+
 # Distance Function.
 def get_distance():
 	global Trigger, Echo
@@ -33,9 +34,10 @@ def get_distance():
 		print('[*] Exception :: get_distance :: ' + str(e))
 		return 100.0
 
+
 # Send image function.
 # parameter Email, Bell
-def send_image(emailId, email=False, bell=False):
+def send_image(email_id, email=False, bell=False):
 	global host, username
 
 	try:
@@ -47,7 +49,7 @@ def send_image(emailId, email=False, bell=False):
 		filename = {}
 		filename['name'] = name
 		filename['username'] = username
-		filename['emailId'] = emailId
+		filename['emailId'] = email_id
 
 		if email:
 			filename['email'] = 'YES'
@@ -59,55 +61,56 @@ def send_image(emailId, email=False, bell=False):
 			filename['email'] = 'NO'
 			filename['bell'] = 'NO'
 
-		jsonFilename = json.dumps(filename)
+		json_filename = json.dumps(filename)
 
 		# creating socket object.
-		backupServer = socket.socket()
+		backup_server = socket.socket()
 
 		# connecting to the backup server.
-		backupServer.connect((host, 9999))
+		backup_server.connect((host, 9999))
 		# send the JSON objet containing filename and username.
-		backupServer.send(str.encode(jsonFilename))
+		backup_server.send(str.encode(json_filename))
 		time.sleep(2)
 
 		# path to the file.
 		# and read the file content
 		path = 'ProgramData/' + name
 		file = open(path, 'rb')
-		fileContent = file.read(2048)
+		file_content = file.read(2048)
 
 		# send the file content until complete.
-		while (fileContent):
-			backupServer.send(fileContent)
-			fileContent = file.read(2048)
+		while file_content:
+			backup_server.send(file_content)
+			file_content = file.read(2048)
 		file.close()
 
-		backupServer.close()
+		backup_server.close()
 
 	except Exception as e:
 		print('[*] Exception :: Image send :: ' + str(e))
 
 
 # Take image function.
-def take_image(emailId, email=False):
+def take_image(email_id, email=False):
 	# initilizing global variables
 	global cameraLock, host, username, camera
 	print('\n[||] Email :: ' + str(email))
 	# locking the camera to prevent another thread to use camera.
 	cameraLock.acquire()
+
 	try:
 		new_filename = 'ProgramData/' + FileName.get_filename()
-
 		camera.capture(new_filename)
 
 		# checking for email request ot Take image request.
 		if email:
-			send_image(emailId, email=True)
+			send_image(email_id, email=True)
 		else:
-			send_image(emailId)
+			send_image(email_id)
 
 	except Exception as e:
 		print('[**] Exception :: Take Image function :: ' + str(e))
+
 	finally:
 		print('[*] Done')
 		# releasing the lock when execution of the method complete.
@@ -115,49 +118,70 @@ def take_image(emailId, email=False):
 		print('\n-' * 5)
 
 
+# Count down function.
 def start_count_down():
 	global callingBellPressed, cameraLock
 	print('[*] Count down start.')
 
 	for i in range(0, 6):
+		# Wait for 6 second.
 		time.sleep(1)
-		currentDistance = get_distance()
-		if currentDistance > MIN_DISTANCE:
+		current_distance = get_distance()
+
+		# When the object moved from door.
+		if current_distance > MIN_DISTANCE:
 			print("[*] Exit from count down.")
 			return
-		print('Object now at {} second ::: {} inch'.format(i, currentDistance))
+		print('Object now at {} second ::: {} inch'.format(i, current_distance))
+
+	# Check the person pressed the bell or not.
 	if not callingBellPressed:
 		cameraLock.acquire()
+
+		# Take Picture and upload to the server.
 		try:
-			print ("[*] Taking picture of SPY.")
+			print("[*] Taking picture of SPY.")
+
 			new_filename = 'ProgramData/' + FileName.get_filename()
 			camera.capture(new_filename)
+
 			time.sleep(1)
 
 			# sending the image.
-			print ("[*] Sending SPY Image")
+			print("[*] Sending SPY Image")
 			send_image(None, bell=True)
+
 		except Exception as e:
 			print('[**] Exception :: start_count_down :: ' + str(e))
 		finally:
 			cameraLock.release()
 
 
+# Thread for HC-SRO4.
+# Monitor for object in front of door.
 def keep_safe_distance():
 	global sensorThreadStatus, callingBellPressed
+
+	# Run until main Thread ends. Check distance in each 1 second.
 	while sensorThreadStatus:
 		try:
-			currentDistance = get_distance()
-			if currentDistance < MIN_DISTANCE:
-				print('Object Detected at : {} inch'.format(currentDistance))
+			current_distance = get_distance()
+
+			# If person is not in safe distance call start_count_down.
+			if current_distance < MIN_DISTANCE:
+				print('Object Detected at : {} inch'.format(current_distance))
 				start_count_down()
-			elif currentDistance > MAX_DISTANCE and callingBellPressed:
+
+			# If person moved away the reset the calling bell.
+			elif current_distance > MAX_DISTANCE and callingBellPressed:
 				callingBellPressed = False
 				print("[*] Calling Bell Presss :: Reset")
 			time.sleep(1)
+
 		except Exception as e:
 			print('[*] Exception :: keep_safe_distance :: ' + str(e))
 			time.sleep(5)
+
 
 # calling Bell Event
 def calling_bell():
@@ -168,17 +192,21 @@ def calling_bell():
 		if GPIO.input(Button) == True:
 			print('[*] Calling Bell pressed.')
 
+			# It stops distance sensor thread to take image and upload into the server while calling bell pressed.
 			callingBellPressed = True
 			cameraLock.acquire()
+
 			try:
+				# get the file name for saving new image.
 				new_filename = 'ProgramData/' + FileName.get_filename()
+				# capture image using Pi camera.
 				camera.capture(new_filename)
-				time.sleep(1)
+				time.sleep(0.5)
 
 				# sending the image.
 				send_image(None, bell=True)
-
 				print('complete')
+
 			except Exception as e:
 				print('[**] Exception :: calling_bell :: ' + str(e))
 			finally:
@@ -226,7 +254,7 @@ info = {}
 info['device'] = 'LockDevice'
 info['username'] = username
 info['mac'] = MAC
-jsonInfo = json.dumps(info)
+json_info = json.dumps(info)
 
 # socket object.
 device = socket.socket()
@@ -234,7 +262,7 @@ device = socket.socket()
 # connecting to main server
 try:
 	device.connect((host, post))
-	device.send(str.encode(jsonInfo))
+	device.send(str.encode(json_info))
 except Exception as e:
 	print('[**] Exception :: Connecting to Main server :: ' + str(e))
 
@@ -243,6 +271,7 @@ try:
 	# starting calling bell, safe distance thread.
 	callingBellThread.start()
 	keepSafeDistanceThread.start()
+
 	# main loop for receiving and replying message/request.
 	while True:
 		try:
@@ -287,7 +316,6 @@ try:
 			callingBellPressed = False
 			print("Red LED :: ON")
 
-
 		# TakeImage request.
 		elif request['request'] == 'TakeImage':
 			print('Requesting for : TAKE IMAGE')
@@ -309,13 +337,15 @@ try:
 except KeyboardInterrupt as e:
 	print('\n-' * 5)
 	print('[*] Connection closing...')
+
 	device.close()
 	time.sleep(0.5)
-	# stopping Calling bell loop
+
+	# stopping all Thread.
 	bellActivator = False
 	sensorThreadStatus = False
 	print('[*] Stopping Program...')
+
 finally:
-	sensorThreadStatus = False
 	camera.close()
 	GPIO.cleanup()

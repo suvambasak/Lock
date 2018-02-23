@@ -36,28 +36,30 @@ def get_distance():
 
 
 def start_count_down():
+	global callingBellPressed
 	print ('[*] Count down start.')
 
 	for i in range(0, 6):
 		time.sleep(1)
-
 		currentDistance = get_distance()
-		if currentDistance > 25 or callingBellPressed:
+		if currentDistance > 25:
 			print("[*] Exit from count down.")
 			return
-
 		print('Object now at {} second ::: {} inch'.format(i, currentDistance))
-	print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Take Image >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+	if not callingBellPressed:
+		print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Take Image >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
 
 def keep_safe_distance():
-	global sensorThreadStatus, distanceSensing
+	global sensorThreadStatus, callingBellPressed
 	while sensorThreadStatus:
 		try:
 			currentDistance = get_distance()
-			if currentDistance < 25 and distanceSensing:
+			if currentDistance < 25:
 				print('Object Detected at : {} inch'.format(currentDistance))
 				start_count_down()
+			elif currentDistance < 40:
+				callingBellPressed = False
 			time.sleep(1)
 		except Exception as e:
 			print('[*] Exception :: keep_safe_distance :: ' + str(e))
@@ -149,10 +151,13 @@ def takeImage(emailId, email=False):
 # calling Bell Event
 def callingBell():
 	# global variable of camera lock and
-	global cameraLock, bellActivator, host, username
+	global cameraLock, bellActivator, host, username, callingBellPressed
+
 	while bellActivator:
 		if GPIO.input(Button) == True:
 			print('[*] Calling Bell pressed.')
+
+			callingBellPressed = True
 			cameraLock.acquire()
 			try:
 				new_filename = 'ProgramData/' + FileName.get_filename()
@@ -170,7 +175,7 @@ def callingBell():
 
 
 # global veriables.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, distanceSensing, callingBellPressed
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, callingBellPressed
 
 redLED = 19
 Button = 26
@@ -195,7 +200,6 @@ post = 9000
 
 bellActivator = True
 sensorThreadStatus = True
-distanceSensing = True
 callingBellPressed = False
 # thread locks || one camera lock || one door lock.
 doorLock = threading.Lock()
@@ -267,6 +271,7 @@ try:
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
 			GPIO.output(redLED, GPIO.HIGH)
+			callingBellPressed = False
 			print("Red LED :: ON")
 
 

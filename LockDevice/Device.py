@@ -42,7 +42,7 @@ def start_count_down():
 	for i in range(0, 6):
 		time.sleep(1)
 		currentDistance = get_distance()
-		if currentDistance > 25:
+		if currentDistance > MIN_DISTANCE:
 			print("[*] Exit from count down.")
 			return
 		print('Object now at {} second ::: {} inch'.format(i, currentDistance))
@@ -55,10 +55,10 @@ def keep_safe_distance():
 	while sensorThreadStatus:
 		try:
 			currentDistance = get_distance()
-			if currentDistance < 25:
+			if currentDistance < MIN_DISTANCE:
 				print('Object Detected at : {} inch'.format(currentDistance))
 				start_count_down()
-			elif currentDistance > 40 and callingBellPressed:
+			elif currentDistance > MAX_DISTANCE and callingBellPressed:
 				callingBellPressed = False
 				print("[*] Calling Bell Presss :: Reset")
 			time.sleep(1)
@@ -176,7 +176,7 @@ def callingBell():
 
 
 # global veriables.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, callingBellPressed
+global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, callingBellPressed, MAX_DISTANCE, MIN_DISTANCE
 
 redLED = 19
 Button = 26
@@ -202,6 +202,8 @@ post = 9000
 bellActivator = True
 sensorThreadStatus = True
 callingBellPressed = False
+MAX_DISTANCE = 40
+MIN_DISTANCE = 25
 # thread locks || one camera lock || one door lock.
 doorLock = threading.Lock()
 cameraLock = threading.Lock()

@@ -37,7 +37,7 @@ def get_distance():
 
 def start_count_down():
 	global callingBellPressed
-	print ('[*] Count down start.')
+	print('[*] Count down start.')
 
 	for i in range(0, 6):
 		time.sleep(1)
@@ -58,8 +58,9 @@ def keep_safe_distance():
 			if currentDistance < 25:
 				print('Object Detected at : {} inch'.format(currentDistance))
 				start_count_down()
-			elif currentDistance < 40:
+			elif currentDistance > 40:
 				callingBellPressed = False
+				print("[*] Calling Bell Presss :: Reset")
 			time.sleep(1)
 		except Exception as e:
 			print('[*] Exception :: keep_safe_distance :: ' + str(e))

@@ -8,7 +8,6 @@ import FileName
 import picamera
 import RPi.GPIO as GPIO
 
-
 # Distance Function.
 def get_distance():
 	global Trigger, Echo
@@ -33,39 +32,6 @@ def get_distance():
 	except Exception as e:
 		print('[*] Exception :: get_distance :: ' + str(e))
 		return 100.0
-
-
-def start_count_down():
-	global callingBellPressed
-	print('[*] Count down start.')
-
-	for i in range(0, 6):
-		time.sleep(1)
-		currentDistance = get_distance()
-		if currentDistance > MIN_DISTANCE:
-			print("[*] Exit from count down.")
-			return
-		print('Object now at {} second ::: {} inch'.format(i, currentDistance))
-	if not callingBellPressed:
-		print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Take Image >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
-
-def keep_safe_distance():
-	global sensorThreadStatus, callingBellPressed
-	while sensorThreadStatus:
-		try:
-			currentDistance = get_distance()
-			if currentDistance < MIN_DISTANCE:
-				print('Object Detected at : {} inch'.format(currentDistance))
-				start_count_down()
-			elif currentDistance > MAX_DISTANCE and callingBellPressed:
-				callingBellPressed = False
-				print("[*] Calling Bell Presss :: Reset")
-			time.sleep(1)
-		except Exception as e:
-			print('[*] Exception :: keep_safe_distance :: ' + str(e))
-			time.sleep(5)
-
 
 # Send image function.
 # parameter Email, Bell
@@ -148,6 +114,50 @@ def takeImage(emailId, email=False):
 		cameraLock.release()
 		print('\n-' * 5)
 
+
+def start_count_down():
+	global callingBellPressed, cameraLock
+	print('[*] Count down start.')
+
+	for i in range(0, 6):
+		time.sleep(1)
+		currentDistance = get_distance()
+		if currentDistance > MIN_DISTANCE:
+			print("[*] Exit from count down.")
+			return
+		print('Object now at {} second ::: {} inch'.format(i, currentDistance))
+	if not callingBellPressed:
+		cameraLock.acquire()
+		try:
+			print ("[*] Taking picture of SPY.")
+			new_filename = 'ProgramData/' + FileName.get_filename()
+			camera.capture(new_filename)
+			time.sleep(1)
+
+			# sending the image.
+			print ("[*] Sending SPY Image")
+			sendImage(None, bell=True)
+		except Exception as e:
+			print('[**] Exception :: start_count_down :: ' + str(e))
+		finally:
+			cameraLock.release()
+
+
+def keep_safe_distance():
+	global sensorThreadStatus, callingBellPressed
+	while sensorThreadStatus:
+		try:
+			currentDistance = get_distance()
+			if currentDistance < MIN_DISTANCE:
+				print('Object Detected at : {} inch'.format(currentDistance))
+				start_count_down()
+			elif currentDistance > MAX_DISTANCE and callingBellPressed:
+				callingBellPressed = False
+				print("[*] Calling Bell Presss :: Reset")
+			time.sleep(1)
+		except Exception as e:
+			print('[*] Exception :: keep_safe_distance :: ' + str(e))
+			time.sleep(5)
 
 # calling Bell Event
 def callingBell():
@@ -305,7 +315,6 @@ except KeyboardInterrupt as e:
 	bellActivator = False
 	sensorThreadStatus = False
 	print('[*] Stopping Program...')
-	print('[*] Done. Pres Enter to stop...\n\n')
 finally:
 	sensorThreadStatus = False
 	camera.close()

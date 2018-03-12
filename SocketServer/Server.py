@@ -25,7 +25,23 @@ def on_off_notification(username, status='NONE', image_id='NONE'):
 	elif status == 'IMAGE':
 		response = urllib.request.urlopen(
 			'http://localhost/Lock/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + image_id)
-	print(response.read())
+
+	response_log = response.read().decode()
+	response_log = response_log.split()
+	response_log = response_log[1]
+
+	response_log_trim = response_log[1:]
+	response_log_trim = response_log_trim[:-1]
+
+	response_json = json.loads(response_log_trim)
+
+	print('#####   Notification Info   #####')
+
+	print('multicast_id :: ', response_json['multicast_id'])
+	print('success :: ', response_json['success'])
+	print('failure :: ', response_json['failure'])
+	print('canonical_ids :: ', response_json['canonical_ids'])
+	print(response_json['results'])
 
 
 # ---------------------   BACK-UP SOCKET SERVER CLASS   ------------------------

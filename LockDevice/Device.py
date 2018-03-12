@@ -29,7 +29,7 @@ def get_distance():
 		sig_time = end - start
 		# Distance in Inches
 		distance = sig_time / 0.000148
-		
+
 		return round(distance)
 	except Exception as e:
 		print('[*] Exception :: get_distance :: ' + str(e))

@@ -1,4 +1,5 @@
-# import urllib.request
+import urllib.request
+import json
 #
 #
 # def onOffNotification(username, status = 'NONE', imageId = 'NONE'):
@@ -16,7 +17,18 @@
 # onOffNotification('basak',status='IMAGE',imageId='1')
 
 
-# f = open("C:/xampp/htdocs/Lock/ServerBackup/basak/test.txt",'w')
-f = open("C:/Users/Suvam Basak/test.txt",'w')
-f.write("Hello world")
-f.close()
+username = 'basak'
+response = urllib.request.urlopen('http://localhost/Lock/notify.php?username=' + username + '&msg=Yout%20Lock%20is%20now%20Online&type=ONOFF&imageId=null')
+response_log = response.read().decode()
+response_log = response_log.split()
+response_log = response_log[1]
+response_log_trim = response_log[1:]
+response_log_trim = response_log_trim[:-1]
+response_json = json.loads(response_log_trim)
+
+print ('#####   Notification Info   #####')
+print ('multicast_id :: ',response_json['multicast_id'])
+print ('success :: ',response_json['success'])
+print ('failure :: ',response_json['failure'])
+print ('canonical_ids :: ',response_json['canonical_ids'])
+print (response_json['results'])

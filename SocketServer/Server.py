@@ -10,6 +10,7 @@ import json
 import sys
 import os
 import urllib.request
+import urllib.request
 
 
 # -----------------------------    NOTIFICATION   ------------------------------------------
@@ -325,6 +326,16 @@ def connection_handler(connection, ip):
 		connection.close()
 		print('[***] Fully Unknown Device.')
 
+# function for updating server ip address.
+def update_server_config(host):
+	try:
+		print ("[*] Updating Server Credentials.\n")
+		print ("Please Wait...")
+		resp = urllib.request.urlopen('https://techcodebox.000webhostapp.com/lock/server_ip.php?info=' + host)
+		print(resp.read().decode())
+	except Exception as e:
+		print('\n[**] Exception :: update server config :: ' + str(e))
+
 
 # ------------------------- MAIN FUNCTION ----------------------
 
@@ -346,6 +357,9 @@ phone_connection_list = {}
 host = socket.gethostbyname(socket.gethostname())
 port = 9000
 backupPort = 9999
+
+# calliing server update function for updating IP.
+update_server_config(host)
 
 # creating server object.
 server = socket.socket()

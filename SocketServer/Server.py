@@ -134,7 +134,7 @@ class BackupServer:
 				# sending image to owner as email.
 				if filename['email'] == 'YES':
 					email.send_image(filename['username'],
-					                 'ServerBackup/' + filename['username'] + '/' + filename['name'])
+									 'ServerBackup/' + filename['username'] + '/' + filename['name'])
 				elif filename['bell'] == 'YES':
 					on_off_notification(filename['username'], status='IMAGE', image_id=str(update_id))
 				else:
@@ -211,7 +211,7 @@ class LockDevice:
 				print('\n[**] Exception Online Tracking :: ' + str(e))
 				loop = False
 
-		# function for creating the directory for the username.
+	# function for creating the directory for the username.
 
 	def create_directory(self):
 		if not os.path.exists('ServerBackup/' + self.username):
@@ -284,9 +284,9 @@ def connection_handler(connection, ip):
 				# starting thread for forwarding the request.
 				# passing request, Lock connection object, phone connection object as agrument.
 				start_new_thread(Forward.request_forward,
-				                 (
-					                 request['request'], request['email'], connection_list[request['username']],
-					                 connection))
+								 (
+									 request['request'], request['email'], connection_list[request['username']],
+									 connection))
 			else:
 				# if the connection is not present in the connection list.
 				# sending reply.
@@ -326,11 +326,12 @@ def connection_handler(connection, ip):
 		connection.close()
 		print('[***] Fully Unknown Device.')
 
+
 # function for updating server ip address.
 def update_server_config(host):
 	try:
-		print ("[*] Updating Server Credentials.\n")
-		print ("Please Wait...")
+		print("[*] Updating Server Credentials.\n")
+		print("Please Wait...")
 		resp = urllib.request.urlopen('https://techcodebox.000webhostapp.com/lock/server_ip.php?info=' + host)
 		print(resp.read().decode())
 	except Exception as e:

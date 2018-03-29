@@ -7,7 +7,7 @@ import sys
 import FileName
 import picamera
 import RPi.GPIO as GPIO
-
+import urllib.request
 
 # Distance Function.
 def get_distance():
@@ -214,6 +214,17 @@ def calling_bell():
 				cameraLock.release()
 
 
+def fetch_server_ip():
+	try:
+		print("[**]  Fetching IP Address.")
+		print("Please Wait...")
+
+		resp = urllib.request.urlopen('https://techcodebox.000webhostapp.com/lock/server_config.txt')
+		ip = resp.read().decode().split()[0]
+		return ip
+	except Exception as e:
+		print('[**] Exception :: fetch_server_ip :: ' + str(e))
+
 # global veriables.
 global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, callingBellPressed, MAX_DISTANCE, MIN_DISTANCE
 
@@ -235,7 +246,7 @@ camera.vflip = True
 # Setting username MAC address Host IPv4 and post number.
 username = 'basak'
 MAC = physicalAddress.getMACHash()
-host = str(sys.argv[1])
+host = fetch_server_ip() #str(sys.argv[1])
 post = 9000
 
 bellActivator = True

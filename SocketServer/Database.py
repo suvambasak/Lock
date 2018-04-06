@@ -5,7 +5,7 @@ class Database:
 	"""Database connection and functions"""
 
 	def __init__(self):
-		self.rootPath = "C:/Users/Suvam Basak/PycharmProjects/Lock/SocketServer/"
+		self.rootPath = "/home/suvam/PycharmProjects/Lock/SocketServer"
 		self.host = 'localhost'
 		self.user = 'root'
 		self.password = ''
@@ -49,8 +49,9 @@ class Database:
 	# delete all online Device
 	def delete_all_online_device(self):
 		try:
-			sql = "TRUNCATE TABLE `onlineList`"
+			sql = "TRUNCATE TABLE `onlinelist`"
 			self.cursor.execute(sql)
+			print('[*] Online List Cleared.\n')
 		# auto commit
 		except Exception as e:
 			print('\n[**] Database :: deleteOnlineDevice :: ' + str(e))

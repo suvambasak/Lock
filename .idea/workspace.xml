@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ace9ace-89ed-4623-9d28-750268312b44" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Lock.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Lock.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Suvam_Basak.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Suvam_Basak.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LockDevice/Device.py" beforeDir="false" afterPath="$PROJECT_DIR$/LockDevice/Device.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LockDevice/Export_IP.py" beforeDir="false" afterPath="$PROJECT_DIR$/LockDevice/Export_IP.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LockDevice/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/LockDevice/Test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketServer/Database.py" beforeDir="false" afterPath="$PROJECT_DIR$/SocketServer/Database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SocketServer/Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/SocketServer/Server.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,14 +20,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="Device.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/LockDevice/Device.py">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SocketServer/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="694">
-              <caret line="248" column="25" selection-start-line="248" selection-start-column="25" selection-end-line="248" selection-end-column="25" />
+            <state relative-caret-position="281">
+              <caret line="161" column="26" lean-forward="true" selection-start-line="161" selection-start-column="26" selection-end-line="161" selection-end-column="26" />
               <folding>
-                <element signature="e#0#29#0" expanded="true" />
+                <element signature="e#0#21#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -38,7 +44,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>distanceSensing</find>
       <find>takeImage</find>
       <find>callingBell</find>
       <find>getHash</find>
@@ -50,7 +55,6 @@
       <find>connectionHandler</find>
       <find>submitNotify</find>
       <find>insertOnlineDevice</find>
-      <find>deleteOnlineDevice</find>
       <find>deleteAllOnlineDevice</find>
       <find>insertImageBackup</find>
       <find>checkAndroidId</find>
@@ -68,6 +72,8 @@
       <find>phoneConnectionList</find>
       <find>backupServerControl</find>
       <find>imageId</find>
+      <find>request_forward</find>
+      <find>deleteOnlineDevice</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -85,14 +91,14 @@
         <option value="$PROJECT_DIR$/LockDevice/CircuitTest.py" />
         <option value="$PROJECT_DIR$/CircuitTest.py" />
         <option value="$PROJECT_DIR$/LockDevice/Test.py" />
-        <option value="$PROJECT_DIR$/SocketServer/Database.py" />
         <option value="$PROJECT_DIR$/SocketServer/SendEmail.py" />
         <option value="$PROJECT_DIR$/SocketServer/Forward.py" />
         <option value="$PROJECT_DIR$/SocketServer/ImageEncoderDecoder.py" />
         <option value="$PROJECT_DIR$/SocketServer/Test.py" />
         <option value="$PROJECT_DIR$/LockDevice/Export_IP.py" />
-        <option value="$PROJECT_DIR$/SocketServer/Server.py" />
         <option value="$PROJECT_DIR$/LockDevice/Device.py" />
+        <option value="$PROJECT_DIR$/SocketServer/Database.py" />
+        <option value="$PROJECT_DIR$/SocketServer/Server.py" />
       </list>
     </option>
   </component>
@@ -133,7 +139,7 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Python" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -251,11 +257,18 @@
       <option name="project" value="LOCAL" />
       <updated>1522266932641</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Server IP address update!!">
+      <created>1522300018018</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1522300018018</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
+    <frame x="0" y="-1" width="1366" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16837482" />
@@ -293,8 +306,21 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/SocketServer/Server.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5865">
+          <caret line="358" column="46" lean-forward="true" selection-start-line="358" selection-start-column="46" selection-end-line="358" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SocketServer/Server.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6613">
           <caret line="400" column="17" lean-forward="true" selection-start-line="400" selection-start-column="17" selection-end-line="400" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -394,20 +420,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SocketServer/Database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1419">
-          <caret line="29" column="66" lean-forward="true" selection-start-line="29" selection-start-column="66" selection-end-line="29" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SocketServer/Forward.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="33" lean-forward="true" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SocketServer/ImageEncoderDecoder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
@@ -429,19 +441,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SocketServer/Server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="328" lean-forward="true" selection-start-line="328" selection-end-line="328" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LockDevice/Device.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="694">
           <caret line="248" column="25" selection-start-line="248" selection-start-column="25" selection-end-line="248" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SocketServer/Forward.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" column="19" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SocketServer/Database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="70" selection-start-line="7" selection-start-column="70" selection-end-line="7" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SocketServer/Server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="161" column="26" lean-forward="true" selection-start-line="161" selection-start-column="26" selection-end-line="161" selection-end-column="26" />
           <folding>
-            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>

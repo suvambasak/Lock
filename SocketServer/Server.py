@@ -3,6 +3,8 @@ import SendEmail as email
 import Database as db
 import ImageEncoderDecoder as ImageEncoder
 import Forward
+import platform
+import subprocess
 import threading
 import socket
 import time
@@ -354,8 +356,25 @@ backup_server_control = True
 connection_list = {}
 phone_connection_list = {}
 
-# Server IPv4 and port and backup port.
-host = socket.gethostbyname(socket.gethostname())
+# Server IPv4 for Windows.
+if platform.system() == 'Windows':
+	print("Platform :: Windows\n")
+	host = socket.gethostbyname(socket.gethostname())
+	print("Ipv4 Found :: ", host, '\n')
+
+# Server IPv4 for Linux.
+elif platform.system() == 'Linux':
+	print("Platform :: Linux\n")
+	host = subprocess.check_output("""ifconfig wlp6s0|grep "inet "|awk -F'[: ]+' '{ print $4 }'""",
+								   shell=True).decode().split()[0]
+	print("Ipv4 Found :: ", host, '\n')
+
+# Server IPv4 for Unknown system.
+else:
+	print("Unknown System Please Enter IPv4 manually..\n")
+	host = input("Server IPv4 :: ")
+
+# Server port and backup port.
 port = 9000
 backupPort = 9999
 
@@ -408,10 +427,12 @@ except KeyboardInterrupt as e:
 
 	# Stopping the loop.
 	backup_server_control = False
+
 	# dummy client to exit the loop.
 	dummy = socket.socket()
 	dummy.connect((host, backupPort))
 	dummy.close()
+
 	# join the backup server thread.
 	backup.join()
 

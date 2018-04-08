@@ -292,7 +292,7 @@ def connection_handler(connection, ip):
 			else:
 				# if the connection is not present in the connection list.
 				# sending reply.
-				connection.sendall(str.encode('Offline.\n'))
+				connection.sendall(str.encode('Disconnected.\n'))
 
 		# if android ID is not matching.
 		else:

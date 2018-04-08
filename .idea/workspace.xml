@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ace9ace-89ed-4623-9d28-750268312b44" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Lock.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Lock.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Suvam_Basak.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Suvam_Basak.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LockDevice/Export_IP.py" beforeDir="false" afterPath="$PROJECT_DIR$/LockDevice/Export_IP.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LockDevice/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/LockDevice/Test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SocketServer/Database.py" beforeDir="false" afterPath="$PROJECT_DIR$/SocketServer/Database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SocketServer/Forward.py" beforeDir="false" afterPath="$PROJECT_DIR$/SocketServer/Forward.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SocketServer/Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/SocketServer/Server.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,20 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SocketServer/Server.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="161" column="26" lean-forward="true" selection-start-line="161" selection-start-column="26" selection-end-line="161" selection-end-column="26" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -92,13 +73,13 @@
         <option value="$PROJECT_DIR$/CircuitTest.py" />
         <option value="$PROJECT_DIR$/LockDevice/Test.py" />
         <option value="$PROJECT_DIR$/SocketServer/SendEmail.py" />
-        <option value="$PROJECT_DIR$/SocketServer/Forward.py" />
         <option value="$PROJECT_DIR$/SocketServer/ImageEncoderDecoder.py" />
         <option value="$PROJECT_DIR$/SocketServer/Test.py" />
         <option value="$PROJECT_DIR$/LockDevice/Export_IP.py" />
         <option value="$PROJECT_DIR$/LockDevice/Device.py" />
         <option value="$PROJECT_DIR$/SocketServer/Database.py" />
         <option value="$PROJECT_DIR$/SocketServer/Server.py" />
+        <option value="$PROJECT_DIR$/SocketServer/Forward.py" />
       </list>
     </option>
   </component>
@@ -264,23 +245,29 @@
       <option name="project" value="LOCAL" />
       <updated>1522300018018</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Platfrom independent IPv4 fetch">
+      <created>1523001432862</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1523001432862</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1366" height="741" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16837482" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50292826" side_tool="true" weight="0.32713178" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49707174" weight="0.26821706" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.3279743" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.573955" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49707174" weight="0.26821706" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.21875" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32868218" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32810047" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -296,7 +283,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Export IP address" />
     <MESSAGE value="Server IP address update!!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Server IP address update!!" />
+    <MESSAGE value="Platfrom independent IPv4 fetch" />
+    <option name="LAST_COMMIT_MESSAGE" value="Platfrom independent IPv4 fetch" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -434,24 +422,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LockDevice/Export_IP.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" selection-start-line="10" selection-end-line="14" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LockDevice/Device.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="694">
           <caret line="248" column="25" selection-start-line="248" selection-start-column="25" selection-end-line="248" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SocketServer/Forward.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="19" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -462,13 +436,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/LockDevice/Export_IP.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="14" column="18" lean-forward="true" selection-start-line="14" selection-start-column="18" selection-end-line="14" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SocketServer/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="161" column="26" lean-forward="true" selection-start-line="161" selection-start-column="26" selection-end-line="161" selection-end-column="26" />
+        <state relative-caret-position="400">
+          <caret line="294" column="65" lean-forward="true" selection-start-line="294" selection-start-column="65" selection-end-line="294" selection-end-column="65" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SocketServer/Forward.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="65" selection-start-line="18" selection-start-column="65" selection-end-line="18" selection-end-column="65" />
         </state>
       </provider>
     </entry>

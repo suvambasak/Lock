@@ -16,7 +16,7 @@ def request_forward(request_to_forward, email, connection, phone_connection):
 	try:
 		connection.sendall(str.encode(json_request))
 		# sending reply to phone.
-		phone_connection.sendall(str.encode('Done.\n'))
+		phone_connection.sendall(str.encode(request_to_forward+' Done.\n'))
 	except Exception as e:
 		print('\n[**]  Exception :: Request forward :: ' + str(e))
 	finally:

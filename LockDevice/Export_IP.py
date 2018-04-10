@@ -2,7 +2,7 @@ import subprocess as sp
 import urllib.request
 
 
-op = sp.check_output("""ifconfig wifi0|grep "inet "|awk -F'[: ]+' '{ print $4 }'""",shell=True)
+op = sp.check_output("""ifconfig wlan0|grep "inet "|awk -F'[: ]+' '{ print $4 }'""",shell=True)
 
 sendtext = op.decode().split()[0]
 # print (sendtext)

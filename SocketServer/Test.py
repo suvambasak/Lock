@@ -1,7 +1,23 @@
 import urllib.request
 import json
-#
-#
+import Database
+
+email = 'suvambasak1@gmail.com'
+username = 'basak'
+text = 'hello world'
+id = 3
+android = '46d550fd4216a595dead885eec8ec34'
+db = Database.Database()
+
+print (
+	db.user_authentication(username,android,email)
+)
+
+
+
+
+
+
 # def onOffNotification(username, status = 'NONE', imageId = 'NONE'):
 # 	if status == 'NONE':
 # 		return
@@ -17,18 +33,24 @@ import json
 # onOffNotification('basak',status='IMAGE',imageId='1')
 
 
-username = 'basak'
-response = urllib.request.urlopen('http://localhost/Lock/notify.php?username=' + username + '&msg=Yout%20Lock%20is%20now%20Online&type=ONOFF&imageId=null')
-response_log = response.read().decode()
-response_log = response_log.split()
-response_log = response_log[1]
-response_log_trim = response_log[1:]
-response_log_trim = response_log_trim[:-1]
-response_json = json.loads(response_log_trim)
+# username = 'basak'
+# response = urllib.request.urlopen('http://localhost/Lock/notify.php?username=' + username + '&msg=Yout%20Lock%20is%20now%20Online&type=ONOFF&imageId=null')
+# response_log = response.read().decode()
+# response_log = response_log.split()
+# response_log = response_log[1]
+# response_log_trim = response_log[1:]
+# response_log_trim = response_log_trim[:-1]
+# response_json = json.loads(response_log_trim)
+#
+# print ('#####   Notification Info   #####')
+# print ('multicast_id :: ',response_json['multicast_id'])
+# print ('success :: ',response_json['success'])
+# print ('failure :: ',response_json['failure'])
+# print ('canonical_ids :: ',response_json['canonical_ids'])
+# print (response_json['results'])
 
-print ('#####   Notification Info   #####')
-print ('multicast_id :: ',response_json['multicast_id'])
-print ('success :: ',response_json['success'])
-print ('failure :: ',response_json['failure'])
-print ('canonical_ids :: ',response_json['canonical_ids'])
-print (response_json['results'])
+
+
+
+
+

@@ -5,7 +5,7 @@ class Database:
 	"""Database connection and functions"""
 
 	def __init__(self):
-		self.rootPath = "C:\PycharmProjects\Lock\SocketServer"
+		self.rootPath = "/home/suvam/PycharmProjects/Lock/SocketServer/ServerBackup"
 		self.host = 'localhost'
 		self.user = 'root'
 		self.password = ''
@@ -32,7 +32,7 @@ class Database:
 	# function for inserting online Device List
 	def insert_online_device(self, username):
 		try:
-			sql = "INSERT INTO `onlineList` (`id`, `username`) VALUES (NULL, '%s');" % (username,)
+			sql = "INSERT INTO `onlinelist` (`id`, `username`) VALUES (NULL, '%s');" % (username,)
 			self.cursor.execute(sql)
 		except Exception as e:
 			print('\n[**] Database :: insertOnlineDevice :: ' + str(e))
@@ -40,7 +40,7 @@ class Database:
 	# delete online Device
 	def delete_online_device(self, username):
 		try:
-			sql = "DELETE FROM onlineList WHERE username = '%s';" % (username,)
+			sql = "DELETE FROM onlinelist WHERE username = '%s';" % (username,)
 			self.cursor.execute(sql)
 		# auto commit
 		except Exception as e:
@@ -60,10 +60,10 @@ class Database:
 	def insert_image_backup(self, username, path):
 		try:
 			path = self.rootPath + path
-			sql = "INSERT INTO `imageBackup` (`id`, `username`, `path`) VALUES (NULL, '%s', '%s');" % (username, path)
+			sql = "INSERT INTO `imagebackup` (`id`, `username`, `path`) VALUES (NULL, '%s', '%s');" % (username, path)
 			self.cursor.execute(sql)
 			# auto commit
-			sql = "SELECT id FROM `imageBackup` WHERE path = '%s'" % (path,)
+			sql = "SELECT id FROM `imagebackup` WHERE path = '%s'" % (path,)
 			self.cursor.execute(sql)
 			result = self.cursor.fetchall()
 			return result[0][0]
@@ -71,32 +71,41 @@ class Database:
 			print('\n[**] Database :: insertImageBackup :: ' + str(e))
 
 	# function for checking android ID.
-	def check_android_id(self, username, android_id):
+	def user_authentication(self, username, android_id, email):
 		try:
-			sql = "SELECT id FROM device WHERE username = '%s' AND androidId = '%s'" % (username, android_id)
+			if self.check_androidid_id(email, android_id) and self.check_permission(email, username):
+				return True
+			else:
+				return False
+		except Exception as e:
+			print('\n[**] Database :: user_authentication :: ' + str(e))
+			return False
+
+	def check_androidid_id(self, email, android_id):
+		try:
+			sql = "SELECT id FROM `owner` WHERE android_id = '%s' AND email = '%s'" % (android_id, email)
 			self.cursor.execute(sql)
 			result = self.cursor.fetchall()
 			return result[0][0]
 		except Exception as e:
-			print('\n[**] Database :: checkAndroidId :: ' + str(e))
+			print('\n[**] Database :: check_androidid_id :: ' + str(e))
 			return 0
 
-	# function for checking member android ID.
-	def check_member_android_id(self, username, android_id):
+	def check_permission(self, email, username):
 		try:
-			sql = "SELECT id FROM `memberDetails` WHERE username = '%s' AND androidId = '%s'" % (
-				username, android_id)
+			sql = "SELECT COUNT(*) FROM `access` WHERE username = '%s' AND email = '%s' AND enable = 'Y'" % (
+			username, email)
 			self.cursor.execute(sql)
 			result = self.cursor.fetchall()
 			return result[0][0]
 		except Exception as e:
-			print('\n[**] Database :: ccheckMemberAndroidId :: ' + str(e))
+			print('\n[**] Database :: check_permission :: ' + str(e))
 			return 0
 
 	# function for checking lock MAC.
 	def check_lock_mac(self, username, lock_mac):
 		try:
-			sql = "SELECT id FROM device WHERE username  = '%s' AND lockMac = '%s'" % (username, lock_mac)
+			sql = "SELECT id FROM device WHERE username  = '%s' AND lock_mac = '%s'" % (username, lock_mac)
 			self.cursor.execute(sql)
 			result = self.cursor.fetchall()
 			return result[0][0]
@@ -107,7 +116,7 @@ class Database:
 	# function for getting email address.
 	def get_email_address(self, username):
 		try:
-			sql = "SELECT email from owner WHERE username = '%s'" % username
+			sql = "SELECT owner_email FROM `device` WHERE username = '%s'" % username
 			self.cursor.execute(sql)
 			result = self.cursor.fetchall()
 			return result[0][0]
@@ -117,7 +126,7 @@ class Database:
 
 	def get_owner_name(self, username):
 		try:
-			sql = "SELECT name FROM owner WHERE username = '%s'" % username
+			sql = "SELECT owner.name FROM `device`, `owner` WHERE device.username = '%s' AND device.owner_email = owner.email" % username
 			self.cursor.execute(sql)
 			# fetch data.
 			result = self.cursor.fetchall()

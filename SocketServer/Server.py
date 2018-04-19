@@ -250,10 +250,10 @@ def connection_handler(connection, ip):
 		database = db.Database()
 
 	### JSON for phone.
-	# print("Device  : " + request['device'])
-	# print("username : " + request['username'])
-	# print("androi ID : " + request['androidId'])
-	# print("request : " + request['request'])
+		# print("Device  : " + request['device'])
+		# print("username : " + request['username'])
+		# print("androi ID : " + request['androidId'])
+		# print("request : " + request['request'])
 
 	### JSON for Lock Device.
 	# print("Device  : " + request['device'])

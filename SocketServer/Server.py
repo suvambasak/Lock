@@ -265,8 +265,7 @@ def connection_handler(connection, ip):
 	# checking device type phone.
 	if request['device'] == 'Phone':
 		# checking android ID.
-		if (database.check_android_id(request['username'], request['androidId']) or database.check_member_android_id(
-				request['username'], request['androidId'])):
+		if database.user_authentication(request['username'], request['androidId'],request['email']):
 
 			# printing details.
 			print('\n[**] Device Details::\n')
@@ -319,7 +318,7 @@ def connection_handler(connection, ip):
 
 		# if MAC Address is not matched.
 		else:
-			print('[**] Lock Device MAC Address is not Matched.')
+			print('[**] Lock Device MAC Address is NOT Matched.')
 	# Sending reply.
 	# connection.sendall(str.encode('MAC Address is not matched...'))
 

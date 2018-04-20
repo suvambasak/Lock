@@ -21,13 +21,13 @@ def on_off_notification(username, status='NONE', image_id='NONE'):
 		return
 	if status == 'ON':
 		response = urllib.request.urlopen(
-			'http://localhost/Lock/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Online&type=ONOFF&imageId=null')
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Online&type=ONOFF&imageId=null')
 	elif status == 'OFF':
 		response = urllib.request.urlopen(
-			'http://localhost/Lock/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Offline&type=ONOFF&imageId=null')
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Offline&type=ONOFF&imageId=null')
 	elif status == 'IMAGE':
 		response = urllib.request.urlopen(
-			'http://localhost/Lock/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + image_id)
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + image_id)
 
 	response_log = response.read().decode()
 	response_log = response_log.split()

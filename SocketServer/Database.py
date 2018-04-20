@@ -5,7 +5,7 @@ class Database:
 	"""Database connection and functions"""
 
 	def __init__(self):
-		self.rootPath = "/home/suvam/PycharmProjects/Lock/SocketServer/ServerBackup"
+		self.rootPath = "/home/suvam/PycharmProjects/Lock/SocketServer/"
 		self.host = 'localhost'
 		self.user = 'root'
 		self.password = ''

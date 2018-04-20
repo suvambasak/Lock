@@ -2,7 +2,7 @@ import urllib.request
 import json
 import Database
 
-email = 'suvambasak1@gmail.com'
+email = 'suvambasak2008@gmail.com'
 username = 'basak'
 text = 'hello world'
 id = 3
@@ -10,7 +10,7 @@ android = '46d550fd4216a595dead885eec8ec34'
 db = Database.Database()
 
 print (
-	db.check_permission(email,username)
+	db.submit_notify(username,email, 'Image Taken', 1)
 )
 
 

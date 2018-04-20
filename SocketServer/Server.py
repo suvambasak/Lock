@@ -295,7 +295,7 @@ def connection_handler(connection, ip):
 
 		# if android ID is not matching.
 		else:
-			print('[**] Device Android ID is not Matched.')
+			print('[**] Device Request Rejected.')
 			# sending reply.
 			connection.sendall(str.encode('Un-known Device.\n'))
 

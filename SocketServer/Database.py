@@ -97,6 +97,8 @@ class Database:
 			username, email)
 			self.cursor.execute(sql)
 			result = self.cursor.fetchall()
+			if result[0][0] == 0:
+				print('\n\n[**] permission Denied.')
 			return result[0][0]
 		except Exception as e:
 			print('\n[**] Database :: check_permission :: ' + str(e))

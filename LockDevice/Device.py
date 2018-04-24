@@ -225,20 +225,95 @@ def fetch_server_ip():
 	except Exception as e:
 		print('[**] Exception :: fetch_server_ip :: ' + str(e))
 
+
+# 1 revolution = 8 cycle.
+# gear reduction = 1/64.
+# 8*64 = 512 cycle for 1 revolution.
+
+def door_locker(control):
+	global ControlPin, lockUnlockRequestIgnore
+	lockUnlockRequestIgnore = False
+
+	forward = [[1, 0, 0, 0],
+			   [1, 1, 0, 0],
+			   [0, 1, 0, 0],
+			   [0, 1, 1, 0],
+			   [0, 0, 1, 0],
+			   [0, 0, 1, 1],
+			   [0, 0, 0, 1],
+			   [1, 0, 0, 1]]
+
+	backward = [[0, 0, 0, 1],
+				[0, 0, 1, 1],
+				[0, 0, 1, 0],
+				[0, 1, 1, 0],
+				[0, 1, 0, 0],
+				[1, 1, 0, 0],
+				[1, 0, 0, 0],
+				[1, 0, 0, 1]]
+	try:
+		doorLock.acquire()
+		time.sleep(0.3)
+
+		if control == True:
+			print('[*] Locking...')
+
+			for i in range(512):
+				# Go through the sequence once
+				for halfstep in range(8):
+					# Go through each half-step
+					for pin in range(4):
+						# Set each pin
+						GPIO.output(ControlPin[pin], forward[halfstep][pin])
+					time.sleep(0.001)
+
+			print('[*] Locked.')
+
+		elif control == False:
+			print('Un-locking...')
+
+			for i in range(512):
+				# Go through the sequence once
+				for halfstep in range(8):
+					# Go through each half-step
+					for pin in range(4):
+						# Set each pin
+						GPIO.output(ControlPin[pin], backward[halfstep][pin])
+					time.sleep(0.001)
+
+			print('[*] Un-locked.')
+
+	except Exception as e:
+		print('[**] Exception :: door_locker :: ' + str(e))
+	finally:
+		lockUnlockRequestIgnore = True
+		doorLock.release()
+
+
 # global veriables.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, callingBellPressed, MAX_DISTANCE, MIN_DISTANCE
+global username, MAC, host, jsonInfo
+global cameraLock, doorLock
+global bellActivator, sensorThreadStatus,  callingBellPressed, lockUnlockRequestIgnore
+global camera, redLED, Button, Trigger, Echo, ControlPin
+global MAX_DISTANCE, MIN_DISTANCE
 
 redLED = 19
 Button = 26
 Trigger = 6
 Echo = 13
+ControlPin = [4, 17, 27, 22]
 
+# PIN Setup
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(redLED, GPIO.OUT)
 GPIO.setup(Button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(Trigger, GPIO.OUT)
 GPIO.setup(Echo, GPIO.IN)
+
+for pin in ControlPin:
+	GPIO.setup(pin, GPIO.OUT)
+	GPIO.output(pin, GPIO.LOW)
 
 camera = picamera.PiCamera()
 camera.vflip = True
@@ -249,6 +324,7 @@ MAC = physicalAddress.getMACHash()
 host = fetch_server_ip() #str(sys.argv[1])
 post = 9000
 
+lockUnlockRequestIgnore = True
 bellActivator = True
 sensorThreadStatus = True
 callingBellPressed = False
@@ -260,6 +336,7 @@ cameraLock = threading.Lock()
 
 callingBellThread = threading.Thread(target=calling_bell, name="bell")
 keepSafeDistanceThread = threading.Thread(target=keep_safe_distance, name="distance")
+
 
 # creating identity json
 info = {}
@@ -318,12 +395,20 @@ try:
 		# Lock request.
 		elif request['request'] == 'Lock':
 			print('Requesting for : LOCK')
+
+			lock_req = threading.Thread(target=door_locker, args=(True), name='functionDoorLocker')
+			lock_req.start()
+
 			GPIO.output(redLED, GPIO.LOW)
 			print("Red LED :: OFF")
 
 		# Unlock request.
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
+
+			unlock_req = threading.Thread(target=door_locker, args=(False), name='functionDoorLocker')
+			unlock_req.start()
+
 			GPIO.output(redLED, GPIO.HIGH)
 			callingBellPressed = False
 			print("Red LED :: ON")

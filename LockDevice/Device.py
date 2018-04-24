@@ -231,8 +231,7 @@ def fetch_server_ip():
 # 8*64 = 512 cycle for 1 revolution.
 
 def door_locker(control):
-	global ControlPin, lockUnlockRequestIgnore
-	lockUnlockRequestIgnore = False
+	global ControlPin, state
 
 	forward = [[1, 0, 0, 0],
 			   [1, 1, 0, 0],
@@ -258,7 +257,7 @@ def door_locker(control):
 		if control == True:
 			print('[*] Locking...')
 
-			for i in range(512):
+			for i in range(256):
 				# Go through the sequence once
 				for halfstep in range(8):
 					# Go through each half-step
@@ -272,7 +271,7 @@ def door_locker(control):
 		elif control == False:
 			print('Un-locking...')
 
-			for i in range(512):
+			for i in range(256):
 				# Go through the sequence once
 				for halfstep in range(8):
 					# Go through each half-step
@@ -288,14 +287,14 @@ def door_locker(control):
 	finally:
 		for pin in ControlPin:
 			GPIO.output(pin, GPIO.LOW)
-		lockUnlockRequestIgnore = True
+		state = not state
 		doorLock.release()
 
 
 # global veriables.
 global username, MAC, host, jsonInfo
 global cameraLock, doorLock
-global bellActivator, sensorThreadStatus,  callingBellPressed, lockUnlockRequestIgnore
+global bellActivator, sensorThreadStatus,  callingBellPressed, lockUnlockRequestIgnore, state
 global camera, redLED, Button, Trigger, Echo, ControlPin
 global MAX_DISTANCE, MIN_DISTANCE
 
@@ -326,6 +325,7 @@ MAC = physicalAddress.getMACHash()
 host = fetch_server_ip() #str(sys.argv[1])
 post = 9000
 
+state = True
 lockUnlockRequestIgnore = True
 bellActivator = True
 sensorThreadStatus = True
@@ -395,7 +395,7 @@ try:
 			device.send(str.encode(jsonResponse))
 
 		# Lock request.
-		elif request['request'] == 'Lock':
+		elif request['request'] == 'Lock' and state:
 			print('Requesting for : LOCK')
 
 			lock_req = threading.Thread(target=door_locker, args=(True,), name='functionDoorLocker')
@@ -405,7 +405,7 @@ try:
 			print("Red LED :: OFF")
 
 		# Unlock request.
-		elif request['request'] == 'Unlock':
+		elif request['request'] == 'Unlock' and not state:
 			print('Requesting for : UNLOCK')
 
 			unlock_req = threading.Thread(target=door_locker, args=(False,), name='functionDoorLocker')

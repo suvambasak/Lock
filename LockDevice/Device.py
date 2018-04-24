@@ -231,7 +231,8 @@ def fetch_server_ip():
 # 8*64 = 512 cycle for 1 revolution.
 
 def door_locker(control):
-	global ControlPin, state
+	global ControlPin, state, lockUnlockRequestIgnore
+	lockUnlockRequestIgnore = True
 
 	forward = [[1, 0, 0, 0],
 			   [1, 1, 0, 0],
@@ -291,7 +292,10 @@ def door_locker(control):
 			state = 'UNLOCK'
 		else:
 			state = 'LOCK'
+		print ('\n'*3)
 		print ("[**] Lock : "+state)
+		print ('\n'*2)
+		lockUnlockRequestIgnore = False
 		doorLock.release()
 
 
@@ -330,7 +334,7 @@ host = fetch_server_ip() #str(sys.argv[1])
 post = 9000
 
 state = 'UNLOCK'
-lockUnlockRequestIgnore = True
+lockUnlockRequestIgnore = False
 bellActivator = True
 sensorThreadStatus = True
 callingBellPressed = False
@@ -402,8 +406,11 @@ try:
 		elif request['request'] == 'Lock' and state == 'UNLOCK':
 			print('Requesting for : LOCK')
 
-			lock_req = threading.Thread(target=door_locker, args=('LOCK',), name='functionDoorLocker')
-			lock_req.start()
+			if not lockUnlockRequestIgnore:
+				lock_req = threading.Thread(target=door_locker, args=('LOCK',), name='functionDoorLocker')
+				lock_req.start()
+			else:
+				print ("\n\n\nAlready Engaged!\n\n")
 
 			GPIO.output(redLED, GPIO.LOW)
 			print("Red LED :: OFF")
@@ -412,8 +419,11 @@ try:
 		elif request['request'] == 'Unlock' and state == 'LOCK':
 			print('Requesting for : UNLOCK')
 
-			unlock_req = threading.Thread(target=door_locker, args=('UNLOCK',), name='functionDoorLocker')
-			unlock_req.start()
+			if not lockUnlockRequestIgnore:
+				unlock_req = threading.Thread(target=door_locker, args=('UNLOCK',), name='functionDoorLocker')
+				unlock_req.start()
+			else:
+				print ("\n\n\nAlready Engaged!\n\n")
 
 			GPIO.output(redLED, GPIO.HIGH)
 			callingBellPressed = False
@@ -436,6 +446,8 @@ try:
 			emailImageFunction = threading.Thread(target=take_image, args=(request['email'], True),
 			                                      name='functionEmailImage')
 			emailImageFunction.start()
+		else:
+			print ("[**] Wrong Request!")
 
 except KeyboardInterrupt as e:
 	print('\n-' * 5)

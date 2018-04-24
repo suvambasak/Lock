@@ -399,7 +399,7 @@ try:
 			device.send(str.encode(jsonResponse))
 
 		# Lock request.
-		elif request['request'] == 'Lock':
+		elif request['request'] == 'Lock' and state == 'UNLOCK':
 			print('Requesting for : LOCK')
 
 			lock_req = threading.Thread(target=door_locker, args=('LOCK',), name='functionDoorLocker')
@@ -409,7 +409,7 @@ try:
 			print("Red LED :: OFF")
 
 		# Unlock request.
-		elif request['request'] == 'Unlock':
+		elif request['request'] == 'Unlock' and state == 'LOCK':
 			print('Requesting for : UNLOCK')
 
 			unlock_req = threading.Thread(target=door_locker, args=('UNLOCK',), name='functionDoorLocker')

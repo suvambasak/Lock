@@ -6,6 +6,7 @@ LED = 19
 BUTTON = 26
 TRIG = 6
 ECHO = 13
+ControlPin = [4, 17, 27, 22]
 
 GPIO.setmode(GPIO.BCM)
 
@@ -15,6 +16,7 @@ print ('LED : ',LED)
 print ('Button : ',BUTTON)
 print ('Trigger : ',TRIG)
 print ('Echo : ',ECHO)
+print ('Stepper Control Pin : ',str(ControlPin))
 print ('---------------------------')
 print ('Press Enter to continue..')
 input()
@@ -92,6 +94,51 @@ def test_distance():
 	except Exception as e:
 		print ('[**] Exception :: '+str(e))
 
+# Stepper test function.
+def test_stepper():
+	forward = [[1, 0, 0, 0],
+			   [1, 1, 0, 0],
+			   [0, 1, 0, 0],
+			   [0, 1, 1, 0],
+			   [0, 0, 1, 0],
+			   [0, 0, 1, 1],
+			   [0, 0, 0, 1],
+			   [1, 0, 0, 1]]
+
+	backward = [[0, 0, 0, 1],
+				[0, 0, 1, 1],
+				[0, 0, 1, 0],
+				[0, 1, 1, 0],
+				[0, 1, 0, 0],
+				[1, 1, 0, 0],
+				[1, 0, 0, 0],
+				[1, 0, 0, 1]]
+
+	print ('90 Degree Clockwise...')
+
+	for i in range(128):
+		print ('STEP::',i)
+		# Go through the sequence once
+		for halfstep in range(8):
+			# Go through each half-step
+			for pin in range(4):
+				# Set each pin
+				GPIO.output(ControlPin[pin], forward[halfstep][pin])
+			time.sleep(0.001)
+
+	print('90 Degree Anti-Clockwise...')
+
+	for i in range(128):
+		print('STEP::', i)
+		# Go through the sequence once
+		for halfstep in range(8):
+			# Go through each half-step
+			for pin in range(4):
+				# Set each pin
+				GPIO.output(ControlPin[pin], backward[halfstep][pin])
+			time.sleep(0.001)
+
+
 try:
 	req = input('Test All Componemts (y/n) : ')
 	if req == 'y' or req == 'Y':
@@ -109,6 +156,9 @@ try:
 
 		print('\n' * 3)
 		test_distance()
+
+		print('\n' * 3)
+		test_stepper()
 	elif req == 'n' or req == 'N':
 		counter = True
 		while counter:
@@ -117,6 +167,7 @@ try:
 			print('Button ::> 2')
 			print('HC-SRO4 ::> 3')
 			print('Pi-Camera ::> 4')
+			print ('Stepper (28BJY-48) ::> 5')
 			print('EXIT ::> 0')
 
 			selection = int(input('\n Your Selection : '))
@@ -129,6 +180,8 @@ try:
 				test_distance()
 			elif selection == 4:
 				test_camera()
+			elif selection == 5:
+				test_stepper()
 			elif selection == 0:
 				counter = False
 			else:

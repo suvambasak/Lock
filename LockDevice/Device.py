@@ -286,6 +286,8 @@ def door_locker(control):
 	except Exception as e:
 		print('[**] Exception :: door_locker :: ' + str(e))
 	finally:
+		for pin in ControlPin:
+			GPIO.output(pin, GPIO.LOW)
 		lockUnlockRequestIgnore = True
 		doorLock.release()
 

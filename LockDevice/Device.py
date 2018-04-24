@@ -254,7 +254,7 @@ def door_locker(control):
 		doorLock.acquire()
 		time.sleep(0.3)
 
-		if control == True:
+		if control == 'LOCK':
 			print('[*] Locking...')
 
 			for i in range(128):
@@ -268,7 +268,7 @@ def door_locker(control):
 
 			print('[*] Locked.')
 
-		elif control == False:
+		elif control == 'UNLOCK':
 			print('Un-locking...')
 
 			for i in range(128):
@@ -287,8 +287,11 @@ def door_locker(control):
 	finally:
 		for pin in ControlPin:
 			GPIO.output(pin, GPIO.LOW)
-		state = not state
-		print ("[**] Lock : "+str(state))
+		if state == 'LOCK':
+			state = 'UNLOCK'
+		else:
+			state = 'LOCK'
+		print ("[**] Lock : "+state)
 		doorLock.release()
 
 
@@ -326,7 +329,7 @@ MAC = physicalAddress.getMACHash()
 host = fetch_server_ip() #str(sys.argv[1])
 post = 9000
 
-state = True
+state = 'UNLOCK'
 lockUnlockRequestIgnore = True
 bellActivator = True
 sensorThreadStatus = True
@@ -399,9 +402,8 @@ try:
 		elif request['request'] == 'Lock':
 			print('Requesting for : LOCK')
 
-			# lock_req = threading.Thread(target=door_locker, args=(True,), name='functionDoorLocker')
-			# lock_req.start()
-			door_locker(True)
+			lock_req = threading.Thread(target=door_locker, args=('LOCK',), name='functionDoorLocker')
+			lock_req.start()
 
 			GPIO.output(redLED, GPIO.LOW)
 			print("Red LED :: OFF")
@@ -410,9 +412,8 @@ try:
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
 
-			# unlock_req = threading.Thread(target=door_locker, args=(False,), name='functionDoorLocker')
-			# unlock_req.start()
-			door_locker(True)
+			unlock_req = threading.Thread(target=door_locker, args=('UNLOCK',), name='functionDoorLocker')
+			unlock_req.start()
 
 			GPIO.output(redLED, GPIO.HIGH)
 			callingBellPressed = False

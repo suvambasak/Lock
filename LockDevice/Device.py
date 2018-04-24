@@ -257,7 +257,7 @@ def door_locker(control):
 		if control == True:
 			print('[*] Locking...')
 
-			for i in range(256):
+			for i in range(128):
 				# Go through the sequence once
 				for halfstep in range(8):
 					# Go through each half-step
@@ -271,7 +271,7 @@ def door_locker(control):
 		elif control == False:
 			print('Un-locking...')
 
-			for i in range(256):
+			for i in range(128):
 				# Go through the sequence once
 				for halfstep in range(8):
 					# Go through each half-step
@@ -288,6 +288,7 @@ def door_locker(control):
 		for pin in ControlPin:
 			GPIO.output(pin, GPIO.LOW)
 		state = not state
+		print ("[**] Lock : "+state)
 		doorLock.release()
 
 
@@ -395,7 +396,7 @@ try:
 			device.send(str.encode(jsonResponse))
 
 		# Lock request.
-		elif request['request'] == 'Lock' and state:
+		elif request['request'] == 'Lock':
 			print('Requesting for : LOCK')
 
 			lock_req = threading.Thread(target=door_locker, args=(True,), name='functionDoorLocker')
@@ -405,7 +406,7 @@ try:
 			print("Red LED :: OFF")
 
 		# Unlock request.
-		elif request['request'] == 'Unlock' and not state:
+		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
 
 			unlock_req = threading.Thread(target=door_locker, args=(False,), name='functionDoorLocker')

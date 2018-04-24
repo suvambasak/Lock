@@ -96,6 +96,10 @@ def test_distance():
 
 # Stepper test function.
 def test_stepper():
+	for pin in ControlPin:
+		GPIO.setup(pin, GPIO.OUT)
+		GPIO.output(pin, GPIO.LOW)
+
 	forward = [[1, 0, 0, 0],
 			   [1, 1, 0, 0],
 			   [0, 1, 0, 0],

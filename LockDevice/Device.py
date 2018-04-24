@@ -288,7 +288,7 @@ def door_locker(control):
 		for pin in ControlPin:
 			GPIO.output(pin, GPIO.LOW)
 		state = not state
-		print ("[**] Lock : "+state)
+		print ("[**] Lock : "+str(state))
 		doorLock.release()
 
 
@@ -399,8 +399,9 @@ try:
 		elif request['request'] == 'Lock':
 			print('Requesting for : LOCK')
 
-			lock_req = threading.Thread(target=door_locker, args=(True,), name='functionDoorLocker')
-			lock_req.start()
+			# lock_req = threading.Thread(target=door_locker, args=(True,), name='functionDoorLocker')
+			# lock_req.start()
+			door_locker(True)
 
 			GPIO.output(redLED, GPIO.LOW)
 			print("Red LED :: OFF")
@@ -409,8 +410,9 @@ try:
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
 
-			unlock_req = threading.Thread(target=door_locker, args=(False,), name='functionDoorLocker')
-			unlock_req.start()
+			# unlock_req = threading.Thread(target=door_locker, args=(False,), name='functionDoorLocker')
+			# unlock_req.start()
+			door_locker(True)
 
 			GPIO.output(redLED, GPIO.HIGH)
 			callingBellPressed = False

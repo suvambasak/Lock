@@ -396,7 +396,7 @@ try:
 		elif request['request'] == 'Lock':
 			print('Requesting for : LOCK')
 
-			lock_req = threading.Thread(target=door_locker, args=(True), name='functionDoorLocker')
+			lock_req = threading.Thread(target=door_locker, args=(True,), name='functionDoorLocker')
 			lock_req.start()
 
 			GPIO.output(redLED, GPIO.LOW)
@@ -406,7 +406,7 @@ try:
 		elif request['request'] == 'Unlock':
 			print('Requesting for : UNLOCK')
 
-			unlock_req = threading.Thread(target=door_locker, args=(False), name='functionDoorLocker')
+			unlock_req = threading.Thread(target=door_locker, args=(False,), name='functionDoorLocker')
 			unlock_req.start()
 
 			GPIO.output(redLED, GPIO.HIGH)

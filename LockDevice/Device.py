@@ -247,7 +247,7 @@ def fetch_server_ip():
 # 8*64 = 512 cycle for 1 revolution.
 
 def door_locker(control):
-	global ControlPin, state, lockUnlockRequestIgnore, STEP
+	global ControlPin, state, lockUnlockRequestIgnore, STEP, redLED
 	lockUnlockRequestIgnore = True
 
 	forward = [[1, 0, 0, 0],
@@ -276,6 +276,12 @@ def door_locker(control):
 
 			for i in range(STEP):
 				# Go through the sequence once
+
+				if i % 2 == 0:
+					GPIO.output(redLED, GPIO.HIGH)
+				else:
+					GPIO.output(redLED, GPIO.LOW)
+
 				for halfstep in range(8):
 					# Go through each half-step
 					for pin in range(4):
@@ -290,6 +296,11 @@ def door_locker(control):
 
 			for i in range(STEP):
 				# Go through the sequence once
+				if i % 2 == 0:
+					GPIO.output(redLED, GPIO.HIGH)
+				else:
+					GPIO.output(redLED, GPIO.LOW)
+
 				for halfstep in range(8):
 					# Go through each half-step
 					for pin in range(4):

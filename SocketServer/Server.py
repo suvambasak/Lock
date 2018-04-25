@@ -16,7 +16,7 @@ import urllib.request
 
 
 # -----------------------------    NOTIFICATION   ------------------------------------------
-def on_off_notification(username, status='NONE', image_id='NONE'):
+def on_off_notification(username, status='NONE', image_id='NONE', msg=None):
 	if status == 'NONE':
 		return
 	if status == 'ON':
@@ -25,6 +25,10 @@ def on_off_notification(username, status='NONE', image_id='NONE'):
 	elif status == 'OFF':
 		response = urllib.request.urlopen(
 			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Offline&type=ONOFF&imageId=null')
+	elif status == 'SPY':
+		text = msg.replace(' ','%20')
+		response = urllib.request.urlopen(
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg='+text+'&type=IMAGE&imageId=' + image_id)
 	elif status == 'IMAGE':
 		response = urllib.request.urlopen(
 			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + image_id)
@@ -139,6 +143,8 @@ class BackupServer:
 									 'ServerBackup/' + filename['username'] + '/' + filename['name'])
 				elif filename['bell'] == 'YES':
 					on_off_notification(filename['username'], status='IMAGE', image_id=str(update_id))
+				elif filename['spy'] == 'YES':
+					on_off_notification(filename['username'], status='SPY', image_id=str(update_id), msg=filename['info'])
 				else:
 					self.database.submit_notify(filename['username'], filename['emailId'], 'Image Taken', update_id)
 

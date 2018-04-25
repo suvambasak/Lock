@@ -40,7 +40,7 @@ def get_distance():
 
 # Send image function.
 # parameter Email, Bell
-def send_image(email_id, email=False, bell=False):
+def send_image(email_id, email=False, bell=False, spy=False, distance=None):
 	global host, username
 
 	try:
@@ -57,12 +57,20 @@ def send_image(email_id, email=False, bell=False):
 		if email:
 			filename['email'] = 'YES'
 			filename['bell'] = 'NO'
+			filename['spy'] = 'NO'
 		elif bell:
 			filename['email'] = 'NO'
 			filename['bell'] = 'YES'
+			filename['spy'] = 'NO'
+		elif spy:
+			filename['email'] = 'NO'
+			filename['bell'] = 'NO'
+			filename['spy'] = 'YES'
+			filename['info'] = 'Object at '+str(distance)+' inch'
 		else:
 			filename['email'] = 'NO'
 			filename['bell'] = 'NO'
+			filename['spy'] = 'NO'
 
 		json_filename = json.dumps(filename)
 
@@ -158,7 +166,7 @@ def start_count_down():
 
 			# sending the image.
 			print("[*] Sending SPY Image")
-			send_image(None, bell=True)
+			send_image(None, spy=True, distance = current_distance)
 
 		except Exception as e:
 			print('\n' * 2)

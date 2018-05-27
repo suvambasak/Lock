@@ -32,13 +32,15 @@ def get_distance():
 
 		return round(distance)
 	except Exception as e:
+		print ('\n'*2)
 		print('[*] Exception :: get_distance :: ' + str(e))
+		print('\n' * 2)
 		return 100
 
 
 # Send image function.
 # parameter Email, Bell
-def send_image(email_id, email=False, bell=False):
+def send_image(email_id, email=False, bell=False, spy=False, distance=None):
 	global host, username
 
 	try:
@@ -55,12 +57,20 @@ def send_image(email_id, email=False, bell=False):
 		if email:
 			filename['email'] = 'YES'
 			filename['bell'] = 'NO'
+			filename['spy'] = 'NO'
 		elif bell:
 			filename['email'] = 'NO'
 			filename['bell'] = 'YES'
+			filename['spy'] = 'NO'
+		elif spy:
+			filename['email'] = 'NO'
+			filename['bell'] = 'NO'
+			filename['spy'] = 'YES'
+			filename['info'] = 'Object at '+str(distance)+' inch'
 		else:
 			filename['email'] = 'NO'
 			filename['bell'] = 'NO'
+			filename['spy'] = 'NO'
 
 		json_filename = json.dumps(filename)
 
@@ -71,7 +81,7 @@ def send_image(email_id, email=False, bell=False):
 		backup_server.connect((host, 9999))
 		# send the JSON objet containing filename and username.
 		backup_server.send(str.encode(json_filename))
-		time.sleep(2)
+		time.sleep(1)
 
 		# path to the file.
 		# and read the file content
@@ -88,7 +98,9 @@ def send_image(email_id, email=False, bell=False):
 		backup_server.close()
 
 	except Exception as e:
+		print('\n' * 2)
 		print('[*] Exception :: Image send :: ' + str(e))
+		print('\n' * 2)
 
 
 # Take image function.
@@ -110,7 +122,9 @@ def take_image(email_id, email=False):
 			send_image(email_id)
 
 	except Exception as e:
+		print('\n' * 2)
 		print('[**] Exception :: Take Image function :: ' + str(e))
+		print('\n' * 2)
 
 	finally:
 		print('[*] Done')
@@ -133,7 +147,9 @@ def start_count_down():
 		if current_distance > MIN_DISTANCE:
 			print("[*] Exit from count down.")
 			return
+		print('\n' * 2)
 		print('Object now at {} second ::: {} inch'.format(i, current_distance))
+		print('\n')
 
 	# Check the person pressed the bell or not.
 	if not callingBellPressed:
@@ -150,10 +166,12 @@ def start_count_down():
 
 			# sending the image.
 			print("[*] Sending SPY Image")
-			send_image(None, bell=True)
+			send_image(None, spy=True, distance = current_distance)
 
 		except Exception as e:
+			print('\n' * 2)
 			print('[**] Exception :: start_count_down :: ' + str(e))
+			print('\n' * 2)
 		finally:
 			cameraLock.release()
 
@@ -180,7 +198,9 @@ def keep_safe_distance():
 			time.sleep(1)
 
 		except Exception as e:
+			print('\n' * 2)
 			print('[*] Exception :: keep_safe_distance :: ' + str(e))
+			print('\n' * 2)
 			time.sleep(5)
 
 
@@ -209,7 +229,9 @@ def calling_bell():
 				print('complete')
 
 			except Exception as e:
+				print('\n' * 2)
 				print('[**] Exception :: calling_bell :: ' + str(e))
+				print('\n' * 2)
 			finally:
 				cameraLock.release()
 
@@ -223,22 +245,125 @@ def fetch_server_ip():
 		ip = resp.read().decode().split()[0]
 		return ip
 	except Exception as e:
+		print('\n' * 2)
 		print('[**] Exception :: fetch_server_ip :: ' + str(e))
+		print('\n' * 2)
+
+
+# 1 revolution = 8 cycle.
+# gear reduction = 1/64.
+# 8*64 = 512 cycle for 1 revolution.
+
+def door_locker(control):
+	global ControlPin, state, lockUnlockRequestIgnore, STEP, redLED
+	lockUnlockRequestIgnore = True
+
+	forward = [[1, 0, 0, 0],
+			   [1, 1, 0, 0],
+			   [0, 1, 0, 0],
+			   [0, 1, 1, 0],
+			   [0, 0, 1, 0],
+			   [0, 0, 1, 1],
+			   [0, 0, 0, 1],
+			   [1, 0, 0, 1]]
+
+	backward = [[0, 0, 0, 1],
+				[0, 0, 1, 1],
+				[0, 0, 1, 0],
+				[0, 1, 1, 0],
+				[0, 1, 0, 0],
+				[1, 1, 0, 0],
+				[1, 0, 0, 0],
+				[1, 0, 0, 1]]
+	try:
+		doorLock.acquire()
+		time.sleep(0.2)
+
+		if control == 'LOCK':
+			print('[*] Locking...')
+
+			for i in range(STEP):
+				# Go through the sequence once
+
+				if i % 2 == 0:
+					GPIO.output(redLED, GPIO.HIGH)
+				else:
+					GPIO.output(redLED, GPIO.LOW)
+
+				for halfstep in range(8):
+					# Go through each half-step
+					for pin in range(4):
+						# Set each pin
+						GPIO.output(ControlPin[pin], forward[halfstep][pin])
+					time.sleep(0.001)
+
+			print('[*] Locked.')
+
+		elif control == 'UNLOCK':
+			print('Un-locking...')
+
+			for i in range(STEP):
+				# Go through the sequence once
+				if i % 2 == 0:
+					GPIO.output(redLED, GPIO.HIGH)
+				else:
+					GPIO.output(redLED, GPIO.LOW)
+
+				for halfstep in range(8):
+					# Go through each half-step
+					for pin in range(4):
+						# Set each pin
+						GPIO.output(ControlPin[pin], backward[halfstep][pin])
+					time.sleep(0.001)
+
+			print('[*] Un-locked.')
+
+	except Exception as e:
+		print('\n' * 2)
+		print('[**] Exception :: door_locker :: ' + str(e))
+		print('\n' * 2)
+	finally:
+		for pin in ControlPin:
+			GPIO.output(pin, GPIO.LOW)
+
+		if state == 'LOCK':
+			state = 'UNLOCK'
+		else:
+			state = 'LOCK'
+
+		print ('\n'*3)
+		print ("[**] Lock : "+state)
+		print ('\n'*2)
+
+		lockUnlockRequestIgnore = False
+
+		doorLock.release()
+
 
 # global veriables.
-global username, MAC, host, jsonInfo, cameraLock, doorLock, bellActivator, camera, redLED, Button, Trigger, Echo, sensorThreadStatus, callingBellPressed, MAX_DISTANCE, MIN_DISTANCE
+global username, MAC, host, jsonInfo
+global cameraLock, doorLock
+global bellActivator, sensorThreadStatus,  callingBellPressed, lockUnlockRequestIgnore, state
+global camera, redLED, Button, Trigger, Echo, ControlPin
+global MAX_DISTANCE, MIN_DISTANCE, STEP
 
 redLED = 19
 Button = 26
 Trigger = 6
 Echo = 13
+ControlPin = [4, 17, 27, 22]
 
+# PIN Setup
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(redLED, GPIO.OUT)
 GPIO.setup(Button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(Trigger, GPIO.OUT)
 GPIO.setup(Echo, GPIO.IN)
+
+for pin in ControlPin:
+	GPIO.setup(pin, GPIO.OUT)
+	GPIO.output(pin, GPIO.LOW)
 
 camera = picamera.PiCamera()
 camera.vflip = True
@@ -249,17 +374,21 @@ MAC = physicalAddress.getMACHash()
 host = fetch_server_ip() #str(sys.argv[1])
 post = 9000
 
+state = 'UNLOCK'
+lockUnlockRequestIgnore = False
 bellActivator = True
 sensorThreadStatus = True
 callingBellPressed = False
 MAX_DISTANCE = 40
 MIN_DISTANCE = 25
+STEP = 128
 # thread locks || one camera lock || one door lock.
 doorLock = threading.Lock()
 cameraLock = threading.Lock()
 
 callingBellThread = threading.Thread(target=calling_bell, name="bell")
 keepSafeDistanceThread = threading.Thread(target=keep_safe_distance, name="distance")
+
 
 # creating identity json
 info = {}
@@ -276,7 +405,9 @@ try:
 	device.connect((host, post))
 	device.send(str.encode(json_info))
 except Exception as e:
+	print('\n' * 2)
 	print('[**] Exception :: Connecting to Main server :: ' + str(e))
+	print('\n' * 2)
 
 # off/on try catch block.
 try:
@@ -293,7 +424,9 @@ try:
 			print(request)
 
 		except Exception as e:
+			print('\n' * 2)
 			print('[**] Exception :: receiving the data :: ' + str(e))
+			print('\n' * 2)
 
 		# server track JSON.
 		# track['request'] = ''
@@ -316,14 +449,32 @@ try:
 			device.send(str.encode(jsonResponse))
 
 		# Lock request.
-		elif request['request'] == 'Lock':
+		elif request['request'] == 'Lock' and state == 'UNLOCK':
 			print('Requesting for : LOCK')
+
+			if not lockUnlockRequestIgnore:
+				lock_req = threading.Thread(target=door_locker, args=('LOCK',), name='functionDoorLocker')
+				lock_req.start()
+			else:
+				print('\n' * 2)
+				print ('Already Engaged!')
+				print('\n' * 2)
+
 			GPIO.output(redLED, GPIO.LOW)
 			print("Red LED :: OFF")
 
 		# Unlock request.
-		elif request['request'] == 'Unlock':
+		elif request['request'] == 'Unlock' and state == 'LOCK':
 			print('Requesting for : UNLOCK')
+
+			if not lockUnlockRequestIgnore:
+				unlock_req = threading.Thread(target=door_locker, args=('UNLOCK',), name='functionDoorLocker')
+				unlock_req.start()
+			else:
+				print('\n' * 2)
+				print ('Already Engaged!')
+				print('\n' * 2)
+
 			GPIO.output(redLED, GPIO.HIGH)
 			callingBellPressed = False
 			print("Red LED :: ON")
@@ -345,6 +496,10 @@ try:
 			emailImageFunction = threading.Thread(target=take_image, args=(request['email'], True),
 			                                      name='functionEmailImage')
 			emailImageFunction.start()
+		else:
+			print ('\n'*2)
+			print ("[**] Wrong Request!")
+			print('\n' * 2)
 
 except KeyboardInterrupt as e:
 	print('\n-' * 5)

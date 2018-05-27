@@ -39,7 +39,7 @@ def disconnect_alert(username):
 		email = str(database.get_email_address(username))
 
 		# content of email.
-		content = 'Dear owner ' + name + ',\n\n\t your locked device seems to have gone offline. Please reconnect to enable lock.'
+		content = 'Dear owner ' + name + ',\n\n\t Your locked device seems to have gone offline. Please reconnect to enable lock.'
 		print("\n[*] COMPOSING mail...\n")
 
 		# feeling up.

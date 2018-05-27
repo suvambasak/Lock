@@ -16,18 +16,22 @@ import urllib.request
 
 
 # -----------------------------    NOTIFICATION   ------------------------------------------
-def on_off_notification(username, status='NONE', image_id='NONE'):
+def on_off_notification(username, status='NONE', image_id='NONE', msg=None):
 	if status == 'NONE':
 		return
 	if status == 'ON':
 		response = urllib.request.urlopen(
-			'http://localhost/Lock/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Online&type=ONOFF&imageId=null')
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Online&type=ONOFF&imageId=null')
 	elif status == 'OFF':
 		response = urllib.request.urlopen(
-			'http://localhost/Lock/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Offline&type=ONOFF&imageId=null')
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Your%20Lock%20is%20now%20Offline&type=ONOFF&imageId=null')
+	elif status == 'SPY':
+		text = msg.replace(' ','%20')
+		response = urllib.request.urlopen(
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg='+text+'&type=IMAGE&imageId=' + image_id)
 	elif status == 'IMAGE':
 		response = urllib.request.urlopen(
-			'http://localhost/Lock/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + image_id)
+			'http://localhost/LockBackend/notify.php?username=' + username + '&msg=Knock%20Knock!!&type=IMAGE&imageId=' + image_id)
 
 	response_log = response.read().decode()
 	response_log = response_log.split()
@@ -139,6 +143,8 @@ class BackupServer:
 									 'ServerBackup/' + filename['username'] + '/' + filename['name'])
 				elif filename['bell'] == 'YES':
 					on_off_notification(filename['username'], status='IMAGE', image_id=str(update_id))
+				elif filename['spy'] == 'YES':
+					on_off_notification(filename['username'], status='SPY', image_id=str(update_id), msg=filename['info'])
 				else:
 					self.database.submit_notify(filename['username'], filename['emailId'], 'Image Taken', update_id)
 
@@ -250,10 +256,10 @@ def connection_handler(connection, ip):
 		database = db.Database()
 
 	### JSON for phone.
-	# print("Device  : " + request['device'])
-	# print("username : " + request['username'])
-	# print("androi ID : " + request['androidId'])
-	# print("request : " + request['request'])
+		# print("Device  : " + request['device'])
+		# print("username : " + request['username'])
+		# print("androi ID : " + request['androidId'])
+		# print("request : " + request['request'])
 
 	### JSON for Lock Device.
 	# print("Device  : " + request['device'])
@@ -265,8 +271,7 @@ def connection_handler(connection, ip):
 	# checking device type phone.
 	if request['device'] == 'Phone':
 		# checking android ID.
-		if (database.check_android_id(request['username'], request['androidId']) or database.check_member_android_id(
-				request['username'], request['androidId'])):
+		if database.user_authentication(request['username'], request['androidId'],request['email']):
 
 			# printing details.
 			print('\n[**] Device Details::\n')
@@ -296,7 +301,7 @@ def connection_handler(connection, ip):
 
 		# if android ID is not matching.
 		else:
-			print('[**] Device Android ID is not Matched.')
+			print('[**] Device Request Rejected.')
 			# sending reply.
 			connection.sendall(str.encode('Un-known Device.\n'))
 
@@ -319,7 +324,7 @@ def connection_handler(connection, ip):
 
 		# if MAC Address is not matched.
 		else:
-			print('[**] Lock Device MAC Address is not Matched.')
+			print('[**] Lock Device MAC Address is NOT Matched.')
 	# Sending reply.
 	# connection.sendall(str.encode('MAC Address is not matched...'))
 

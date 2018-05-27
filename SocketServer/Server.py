@@ -210,6 +210,7 @@ class LockDevice:
 				device_reply_cipher = self.connection.recv(2014).decode()
 				#decryption
 				device_reply = AESCipher().decrypt(device_reply_cipher)
+				print (device_reply)
 
 				device_reply = json.loads(device_reply)
 

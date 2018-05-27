@@ -208,9 +208,10 @@ class LockDevice:
 				# track['message'] = 'online'
 				# track['reply'] = 'online'
 				device_reply_cipher = self.connection.recv(2014).decode()
+				# print(device_reply_cipher)
+
 				#decryption
 				device_reply = AESCipher().decrypt(device_reply_cipher)
-				print (device_reply)
 
 				device_reply = json.loads(device_reply)
 

@@ -8,6 +8,7 @@ import FileName
 import picamera
 import RPi.GPIO as GPIO
 import urllib.request
+from AES import AESCipher
 
 # Distance Function.
 def get_distance():
@@ -418,7 +419,11 @@ try:
 	# main loop for receiving and replying message/request.
 	while True:
 		try:
-			request = device.recv(1024).decode()
+			cipher = device.recv(1024).decode()
+
+			#decryption
+			request = AESCipher().decrypt(cipher)
+
 			# loads the JSON.
 			request = json.loads(request)
 			print(request)

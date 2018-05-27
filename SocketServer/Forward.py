@@ -1,4 +1,5 @@
 import json
+from AES import AESCipher
 
 
 # function from forwarding request to the lock device.
@@ -12,9 +13,12 @@ def request_forward(request_to_forward, email, connection, phone_connection):
 	# converting to JSON object
 	json_request = json.dumps(request)
 
+	#encryption
+	cipher_request = AESCipher().encrypt(json_request)
+
 	# sending to the request.
 	try:
-		connection.sendall(str.encode(json_request))
+		connection.sendall(str.encode(cipher_request))
 		# sending reply to phone.
 		phone_connection.sendall(str.encode(request_to_forward+' Done.\n'))
 	except Exception as e:

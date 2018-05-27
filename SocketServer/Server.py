@@ -13,6 +13,7 @@ import sys
 import os
 import urllib.request
 import urllib.request
+from AES import AESCipher
 
 
 # -----------------------------    NOTIFICATION   ------------------------------------------
@@ -198,7 +199,11 @@ class LockDevice:
 				# track['request'] = ''
 				# track['message'] = 'online'
 
-				self.connection.send(str.encode(json_track))
+				packet = str.encode(json_track)
+				#encryption
+				cipher = AESCipher().encrypt(packet)
+
+				self.connection.send(cipher)
 				time.sleep(3)
 
 				# Getting reply from Lock device.

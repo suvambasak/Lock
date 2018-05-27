@@ -420,7 +420,7 @@ try:
 	while True:
 		try:
 			cipher = device.recv(1024).decode()
-			print (cipher)
+			# print (cipher)
 
 			#decryption
 			request = AESCipher().decrypt(cipher)
@@ -451,8 +451,11 @@ try:
 			# creating JSON response.
 			jsonResponse = json.dumps(response)
 
+			#encryption
+			jsonResponse_cipher = AESCipher().encrypt(jsonResponse)
+
 			# replying to the server.
-			device.send(str.encode(jsonResponse))
+			device.send(jsonResponse_cipher)
 
 		# Lock request.
 		elif request['request'] == 'Lock' and state == 'UNLOCK':

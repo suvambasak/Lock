@@ -33,7 +33,7 @@ class AESCipher:
 		raw = pad(raw)
 		iv = Random.new().read(AES.block_size)
 		cipher = AES.new(self.key, AES.MODE_CBC, iv)
-		return b64encode(iv + cipher.encrypt(raw)).decode()
+		return b64encode(iv + cipher.encrypt(raw))
 
 	def decrypt(self, enc):
 		enc = b64decode(enc)

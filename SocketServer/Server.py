@@ -192,6 +192,7 @@ class LockDevice:
 		# converting into JSON.
 		json_track = json.dumps(track)
 
+		#encryption
 		cipher = AESCipher().encrypt(json_track)
 
 		while loop:
@@ -206,7 +207,9 @@ class LockDevice:
 				# Getting reply from Lock device.
 				# track['message'] = 'online'
 				# track['reply'] = 'online'
-				device_reply = self.connection.recv(2014).decode()
+				device_reply_cipher = self.connection.recv(2014).decode()
+				#decryption
+				device_reply = AESCipher().decrypt(device_reply_cipher)
 
 				device_reply = json.loads(device_reply)
 

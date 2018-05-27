@@ -18,7 +18,7 @@ def request_forward(request_to_forward, email, connection, phone_connection):
 
 	# sending to the request.
 	try:
-		connection.sendall(str.encode(cipher_request))
+		connection.sendall(cipher_request)
 		# sending reply to phone.
 		phone_connection.sendall(str.encode(request_to_forward+' Done.\n'))
 	except Exception as e:

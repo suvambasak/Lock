@@ -15,7 +15,6 @@ import urllib.request
 import urllib.request
 from AES import AESCipher
 
-
 # -----------------------------    NOTIFICATION   ------------------------------------------
 def on_off_notification(username, status='NONE', image_id='NONE', msg=None):
 	if status == 'NONE':
@@ -193,15 +192,13 @@ class LockDevice:
 		# converting into JSON.
 		json_track = json.dumps(track)
 
+		cipher = AESCipher().encrypt(json_track)
+
 		while loop:
 			try:
 				# sending JSON track.
 				# track['request'] = ''
 				# track['message'] = 'online'
-
-				packet = str.encode(json_track)
-				#encryption
-				cipher = AESCipher().encrypt(packet)
 
 				self.connection.send(cipher)
 				time.sleep(3)

@@ -420,6 +420,7 @@ try:
 	while True:
 		try:
 			cipher = device.recv(1024).decode()
+			print (cipher)
 
 			#decryption
 			request = AESCipher().decrypt(cipher)

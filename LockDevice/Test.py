@@ -47,7 +47,7 @@ seq = [	[0,0,0,1],
 # gear reduction = 1/64
 # 8*64 = 512 cycle for 1 revolution
 
-for i in range(64):
+for i in range(16):
 	# Go through the sequence once
 	for halfstep in range(8):
 		# Go through each half-step

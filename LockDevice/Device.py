@@ -367,7 +367,7 @@ for pin in ControlPin:
 	GPIO.output(pin, GPIO.LOW)
 
 camera = picamera.PiCamera()
-camera.vflip = True
+# camera.vflip = True
 
 # Setting username MAC address Host IPv4 and post number.
 username = 'basak'

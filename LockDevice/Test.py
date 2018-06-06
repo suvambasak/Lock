@@ -15,7 +15,7 @@ import time
 
 GPIO.setmode(GPIO.BOARD)
 
-ControlPin = [7,11,13,15]
+ControlPin = [4, 17, 27, 22]
 
 for pin in ControlPin:
 	GPIO.setup(pin,GPIO.OUT)

@@ -17,7 +17,7 @@ def send(email, msg):
 		s.ehlo()
 
 		# logging in.
-		s.login('tech.codebox@gmail.com', 'pythontest')
+		s.login('tech.codebox@gmail.com', '**********')
 		print("[*] Logged in...\n")
 		print("[*] Sending mail...\n")
 

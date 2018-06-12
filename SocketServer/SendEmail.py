@@ -16,8 +16,11 @@ def send(email, msg):
 		s.starttls()
 		s.ehlo()
 
+		# reading password.
+		pwd = open('pwd.pem','r').read()
+
 		# logging in.
-		s.login('tech.codebox@gmail.com', 'pythontest')
+		s.login('tech.codebox@gmail.com', pwd)
 		print("[*] Logged in...\n")
 		print("[*] Sending mail...\n")
 

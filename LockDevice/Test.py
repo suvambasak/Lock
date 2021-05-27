@@ -18,8 +18,8 @@ GPIO.setmode(GPIO.BCM)
 ControlPin = [4, 17, 27, 22]
 
 for pin in ControlPin:
-	GPIO.setup(pin,GPIO.OUT)
-	GPIO.output(pin,0)
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, 0)
 
 # clockwise
 
@@ -33,14 +33,14 @@ for pin in ControlPin:
 # 		[1,0,0,1]	]
 
 # counter-clockwise
-seq = [	[0,0,0,1],
-		[0,0,1,1],
-		[0,0,1,0],
-		[0,1,1,0],
-		[0,1,0,0],
-		[1,1,0,0],
-		[1,0,0,0],
-		[1,0,0,1]	]
+seq = [	[0, 0, 0, 1],
+        [0, 0, 1, 1],
+        [0, 0, 1, 0],
+        [0, 1, 1, 0],
+        [0, 1, 0, 0],
+        [1, 1, 0, 0],
+        [1, 0, 0, 0],
+        [1, 0, 0, 1]	]
 
 
 # 1 revolution = 8 cycle
@@ -48,12 +48,12 @@ seq = [	[0,0,0,1],
 # 8*64 = 512 cycle for 1 revolution
 
 for i in range(16):
-	# Go through the sequence once
-	for halfstep in range(8):
-		# Go through each half-step
-		for pin in range(4):
-			# Set each pin
-			GPIO.output(ControlPin[pin], seq[halfstep][pin])
-		time.sleep(0.001)
+    # Go through the sequence once
+    for halfstep in range(8):
+        # Go through each half-step
+        for pin in range(4):
+            # Set each pin
+            GPIO.output(ControlPin[pin], seq[halfstep][pin])
+        time.sleep(0.001)
 
 GPIO.cleanup()
